@@ -1,0 +1,11 @@
+.navbar {
+  background-color: #007bff !important; /* Cambia el color de fondo */
+}
+
+.nav-link {
+  color: white !important; /* Cambia el color del texto */
+}
+
+.nav-link:hover {
+  color: #ffcc00 !important; /* Cambia el color al pasar el mouse */
+}
