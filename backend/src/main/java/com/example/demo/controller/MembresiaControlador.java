@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -70,8 +71,40 @@ public class MembresiaControlador {
         if (m != null) {
             memRep.delete(m);
             dto_membresia.put("borrado", "OK");
+        } else
+            dto_membresia.put("borrado", "fail");
+
+        return dto_membresia;
+    }
+
+    @PutMapping(path = "/editarMembresia", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public DTO editarMembresia(@RequestBody DatosAltaMembresia dam, HttpServletRequest request) {
+        DTO dto_membresia = new DTO();
+
+        // Buscar la membresía existente por su ID
+        Membresia m = memRep.findById(dam.id);
+
+        if (m != null) {
+            // Actualizar los campos si se proporcionan
+            if (dam.tipo != null) {
+                m.setTipo(dam.tipo);
+            }
+            if (dam.precio > 0) {
+                m.setPrecio(dam.precio);
+            }
+            if (dam.duracionMeses > 0) {
+                m.setDuracionMeses(dam.duracionMeses);
+            }
+
+            // Guardar la membresía actualizada
+            memRep.save(m);
+
+            dto_membresia.put("result", "ok");
+            dto_membresia.put("message", "Membresía actualizada correctamente");
+        } else {
+            dto_membresia.put("result", "fail");
+            dto_membresia.put("message", "Membresía no encontrada");
         }
-        else dto_membresia.put("borrado", "fail");
 
         return dto_membresia;
     }
