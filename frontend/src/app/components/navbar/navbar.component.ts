@@ -1,25 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Importa CommonModule
-import { AuthService } from '../../services/auth.service';
+import { RouterModule } from '@angular/router'; // Importa RouterModule
 
 @Component({
   selector: 'app-navbar',
-  standalone:true,
-  imports: [CommonModule],
+  standalone: true, // Marca el componente como independiente
+  imports: [CommonModule, RouterModule], // Importa los módulos necesarios
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent {
-  isLoggedIn: boolean = false;
-
-  constructor(private authService: AuthService) {
-    this.authService.isLoggedIn$.subscribe((loggedIn) => {
-      this.isLoggedIn = loggedIn;
-    });
-  }
-
-  logout() {
-    this.authService.logout();
-  }
+  isLoggedIn = false; // Define el estado inicial
 }
-  
+
