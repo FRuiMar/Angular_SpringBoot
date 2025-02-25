@@ -71,10 +71,16 @@ public class MembresiaControlador {
         if (m != null) {
             memRep.delete(m);
             dto_membresia.put("borrado", "OK");
-        } else
-            dto_membresia.put("borrado", "fail");
+        }
+        else dto_membresia.put("borrado", "fail");
 
         return dto_membresia;
+    }
+
+    @PostMapping(path = "/addmembresia")
+    public void addMembresia(@RequestBody DatosAltaMembresia dam, HttpServletRequest request) {
+        Membresia m = new Membresia(dam.id, dam.tipo, dam.precio, dam.duracionMeses);
+        memRep.save(m);
     }
 
     @PutMapping(path = "/editarMembresia", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -108,13 +114,13 @@ public class MembresiaControlador {
 
         return dto_membresia;
     }
-
-    @PostMapping(path = "/addmembresia")
-    public void addMembresia(@RequestBody DatosAltaMembresia dam, HttpServletRequest request) {
-        Membresia m = new Membresia(dam.id, dam.tipo, dam.precio, dam.duracionMeses);
-        memRep.save(m);
-    }
-
+    
+    
+    
+    
+    
+    
+    
     static class DatosAltaMembresia {
         int id;
         String tipo;
