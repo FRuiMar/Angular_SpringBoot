@@ -19,19 +19,35 @@
                                     placeholder="Introduzca su nombre" />
                             </div>
                             <div class="col-md-6">
-                                <label for="apellidos" class="form-label">Apellidos:</label>
-                                <input type="text" class="form-control" id="apellidos" formControlName="apellidos"
+                                <label for="apellido" class="form-label">Apellidos:</label>
+                                <input type="text" class="form-control" id="apellido" formControlName="apellido"
                                     placeholder="Introduzca sus apellidos" />
                             </div>
                         </div>
 
 
-                        <!-- Email e Imagen -->
+                        <!-- DNi y Email -->
                         <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <label for="dni" class="form-label">DNI:</label>
+                                <input type="dni" class="form-control" id="dni" formControlName="dni"
+                                    placeholder="12345678a" />
+                            </div>
                             <div class="col-md-6">
                                 <label for="email" class="form-label">Correo electrónico:</label>
                                 <input type="email" class="form-control" id="email" formControlName="email"
                                     placeholder="usuario@gmail.com" />
+                            </div>
+
+                        </div>
+
+                        <!-- Imagen -->
+                        <div class="mb-3 row">
+                            <div>
+                                <label for="imagen">Photo</label>
+                                <input name="imagen" id="imagen" type="file" class="form-control"
+                                    (change)="onFileChange($event)" required>
+
                             </div>
                         </div>
 
@@ -47,6 +63,15 @@
                                 <input type="password" class="form-control" id="confirmPassword"
                                     formControlName="confirmPassword" placeholder="Repita la contraseña" />
                             </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <label for="membresia" class="form-label">Membresia:</label>
+                                <input type="text" class="form-control" id="membresia" formControlName="membresia"
+                                    placeholder="Selecciona tu membresía 1, 2, 3, 4, 5" />
+                            </div>
+
                         </div>
 
                         <!-- Botón de registro -->

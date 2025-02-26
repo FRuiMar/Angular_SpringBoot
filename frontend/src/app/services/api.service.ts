@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { Form } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -20,8 +21,10 @@ export class ApiService {
     return this.http.post<any>(`${this.baseUrl}/usuario/obtenerPorId`, { id });
   }
 
-  createUsuario(usuario: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/usuario/addUsuario`, usuario);
+  createUsuario(usuario: FormData) {
+    return this.http.post(`${this.baseUrl}/usuario/addUsuario`, usuario, {
+      headers: {}
+    });
   }
 
   updateUsuario(usuario: any): Observable<any> {
