@@ -1,5 +1,35 @@
-<div class="container">
-    <h1>Clases de Gimnasio</h1>
-    <p>Aquí puedes ver todas nuestras clases disponibles.</p>
-    <!-- Añade más contenido según sea necesario -->
+<div class="container mt-4">
+    <h2 class="mb-4">Lista de Clases de Gimnasio</h2>
+
+    <!-- Cuadrícula de flip cards -->
+    <div class="row">
+        <div *ngFor="let clase of clases" class="col-md-4 mb-4">
+            <div class="flip-card" [class.flipped]="clase.flipped" (click)="toggleFlip(clase)">
+                <div class="flip-card-inner">
+                    <!-- Cara frontal -->
+                    <div class="flip-card-front card">
+                        <img [src]="clase.imagen" class="card-img-top" alt="{{ clase.nombre }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ clase.nombre }}</h5>
+                        </div>
+                    </div>
+
+                    <!-- Cara trasera -->
+                    <div class="flip-card-back card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ clase.nombre }}</h5>
+                            <p class="card-text"><strong>Horario:</strong> {{ clase.horario }}</p>
+                            <p class="card-text"><strong>Entrenador:</strong> {{ clase.entrenador }}</p>
+                            <p class="card-text"><strong>Capacidad:</strong> {{ clase.capacidad }} personas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensaje si no hay clases -->
+    <div *ngIf="clases.length === 0" class="alert alert-info">
+        No hay clases registradas.
+    </div>
 </div>
