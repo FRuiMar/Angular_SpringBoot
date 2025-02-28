@@ -1,45 +1,20 @@
-<div class="container mt-4">
-    <h2 class="mb-4">Lista de Entrenadores</h2>
-
-    <!-- Tabla de Angular Material -->
-    <table mat-table [dataSource]="entrenadores" class="mat-elevation-z8">
-        <!-- Columna ID -->
-        <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef>ID</th>
-            <td mat-cell *matCellDef="let entrenador">{{ entrenador.id }}</td>
-        </ng-container>
-
-        <!-- Columna Nombre -->
-        <ng-container matColumnDef="nombre">
-            <th mat-header-cell *matHeaderCellDef>Nombre</th>
-            <td mat-cell *matCellDef="let entrenador">{{ entrenador.nombre }}</td>
-        </ng-container>
-
-        <!-- Columna Email -->
-        <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef>Email</th>
-            <td mat-cell *matCellDef="let entrenador">{{ entrenador.email }}</td>
-        </ng-container>
-
-        <!-- Columna Especialidad -->
-        <ng-container matColumnDef="especialidad">
-            <th mat-header-cell *matHeaderCellDef>Especialidad</th>
-            <td mat-cell *matCellDef="let entrenador">{{ entrenador.especialidad }}</td>
-        </ng-container>
-
-        <!-- Columna Experiencia -->
-        <ng-container matColumnDef="experiencia">
-            <th mat-header-cell *matHeaderCellDef>Años de Experiencia</th>
-            <td mat-cell *matCellDef="let entrenador">{{ entrenador.experiencia }}</td>
-        </ng-container>
-
-        <!-- Filas -->
-        <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-        <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
-    </table>
-
-    <!-- Mensaje si no hay entrenadores -->
-    <div *ngIf="entrenadores.length === 0" class="alert alert-info">
-        No hay entrenadores registrados.
-    </div>
-</div>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Especialidad</th>
+            <th>Experiencia</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let entrenador of entrenadores">
+            <td>{{ entrenador.id }}</td>
+            <td>{{ entrenador.nombre }}</td>
+            <td>{{ entrenador.email }}</td>
+            <td>{{ entrenador.especialidad }}</td>
+            <td>{{ entrenador.experiencia }}</td>
+        </tr>
+    </tbody>
+</table>

@@ -15,14 +15,10 @@ export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private apiService: ApiService,
-    private router: Router
-  ) {
+  constructor(private fb: FormBuilder, private apiService: ApiService, private router: Router) {
     this.loginForm = this.fb.group({
-      usuario: ['', [Validators.required]],
-      password: ['', [Validators.required]],
+      email: ['', [Validators.required]],    //si alguna de las dos validacones no es correcta, el  loginForm es invalido, 
+      pass: ['', [Validators.required]],        //que es lo que compruebo más abajo con el .invalid en el método login()
     });
   }
 
@@ -32,12 +28,21 @@ export class LoginComponent {
       return;
     }
 
-    const credentials = this.loginForm.value;
+    if (typeof localStorage === 'undefined') {
+      this.errorMessage = 'LOGIN - localStorage no está disponible en este entorno.';
+      return;
+    }
+    const credentials = this.loginForm.value;  //si el formulario es válido, se obtienen los valores de los campos
 
     this.apiService.login(credentials).subscribe({
       next: (response) => {
         if (response.result === 'ok') {
-          this.router.navigate(['/']); // Navega sin necesidad de recargar
+          // Espera a que el estado del usuario se actualice antes de redirigir
+          this.apiService.user$.subscribe(user => {
+            if (user) {
+              this.router.navigate(['/']); // Redirige solo si el usuario está actualizado
+            }
+          });
         } else {
           this.errorMessage = response.msg || 'Error en el inicio de sesión.';
         }
@@ -55,7 +60,7 @@ export class LoginComponent {
   //         this.apiService.saveUserData(localStorage.getItem('jwt')!, response);
   //         this.router.navigate(['/']);
   //       } else {
-  //         this.errorMessage = 'Error al obtener los datos del usuario22.';
+  //         this.errorMessage = 'Error al obtener los datos del usuario.';
   //       }
   //     },
   //     error: () => {
@@ -64,5 +69,24 @@ export class LoginComponent {
   //   });
   // }
 
+  getUserData(): void {
+    if (typeof localStorage !== 'undefined') {
+      this.apiService.getAuthenticatedUser().subscribe({
+        next: (response) => {
+          if (response.result === 'ok') {
+            this.apiService.saveUserData(localStorage.getItem('jwt')!, response);
+            this.router.navigate(['/']);
+          } else {
+            this.errorMessage = 'Error al obtener los datos del usuario.';
+          }
+        },
+        error: () => {
+          this.errorMessage = 'Error al obtener los datos del usuario.';
+        },
+      });
+    } else {
+      console.warn('localStorage no está disponible en este entorno.');
+    }
+  }
 
 }

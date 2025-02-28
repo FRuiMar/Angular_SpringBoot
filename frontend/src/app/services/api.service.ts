@@ -1,15 +1,145 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
+import { isPlatformBrowser } from '@angular/common'; // Importa isPlatformBrowser
+import { PLATFORM_ID } from '@angular/core'; // Importa PLATFORM_ID
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private baseUrl = 'http://localhost:8080'; // URL de tu backend
+  private baseUrl = 'http://localhost:8080';
 
-  constructor(private http: HttpClient) { }
+  private userSubject = new BehaviorSubject<any>(null); // BehaviorSubject para obtener usuario
+  user$ = this.userSubject.asObservable(); // Observable para obtener usuario en tiempo real
+
+  // constructor(private http: HttpClient) {
+  //   if (this.isLocalStorageAvailable()) {
+  //     const user = this.getUserFromLocalStorage();
+  //     if (user) {
+  //       this.userSubject.next(user);
+  //     }
+  //   } else {
+  //     console.warn('localStorage no está disponible en este entorno.');
+  //   }
+  // }
+
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object // Inyecta PLATFORM_ID
+  ) {
+    // Verifica si el código se ejecuta en el navegador y si localStorage está disponible
+    if (isPlatformBrowser(this.platformId) && this.isLocalStorageAvailable()) {
+      const user = this.getUserFromLocalStorage(); // Obtén el usuario desde localStorage
+      if (user) {
+        this.userSubject.next(user); // Actualiza el BehaviorSubject con el usuario
+      }
+    }
+  }
+
+
+  // Método para verificar si localStorage está disponible
+  private isLocalStorageAvailable(): boolean {
+    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+  }
+
+  login(credentials: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/usuario/auth`, credentials).pipe(
+      tap(response => {
+        if (response.result === 'ok' && this.isLocalStorageAvailable()) {
+          localStorage.setItem('jwt', response.jwt);
+          this.getAuthenticatedUser().subscribe({
+            next: (user) => {
+              this.saveUserData(response.jwt, user);
+            },
+            error: (error) => {
+              console.error('Error al obtener el usuario autenticado:', error);
+            }
+          });
+        }
+      }),
+      catchError(error => {
+        console.error('Error en el login:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+
+  // // Método para obtener el usuario autenticado
+  getAuthenticatedUser(): Observable<any> {
+    if (!this.isLocalStorageAvailable()) {
+      console.error('localStorage no está disponible');
+      return throwError(() => new Error('localStorage no está disponible'));
+    }
+
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+      console.warn('No hay token disponible en localStorage');
+      return throwError(() => new Error('No hay token disponible'));
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.get<any>(`${this.baseUrl}/usuario/who`, { headers }).pipe(
+      tap(user => {
+        console.log('✅ Usuario autenticado recibido:', user);
+        this.userSubject.next(user);
+      }),
+      catchError(error => {
+        console.error('Error al obtener el usuario autenticado:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  // Método para guardar el token y el usuario en el localStorage
+  saveUserData(token: string, user: any): void {
+    if (this.isLocalStorageAvailable()) {
+      try {
+        localStorage.setItem('jwt', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        console.log('Datos del usuario guardados:', user);
+        this.userSubject.next(user);
+      } catch (error) {
+        console.error('Error al guardar datos en localStorage:', error);
+      }
+    } else {
+      console.warn('localStorage no está disponible en este entorno.');
+    }
+  }
+
+  // Método para obtener el usuario del localStorage
+  getUserFromLocalStorage(): any {
+    if (this.isLocalStorageAvailable()) {
+      try {
+        const user = localStorage.getItem('user');
+        return user ? JSON.parse(user) : null;
+      } catch (error) {
+        console.error('Error al obtener datos de localStorage:', error);
+        return null;
+      }
+    }
+    return null;
+  }
+
+  // Método para cerrar sesión
+  logout(): void {
+    if (this.isLocalStorageAvailable()) {
+      try {
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('user');
+        this.userSubject.next(null);
+      } catch (error) {
+        console.error('Error al eliminar datos de localStorage:', error);
+      }
+    } else {
+      console.warn('localStorage no está disponible en este entorno.');
+    }
+  }
+
+
 
   // Métodos para Usuarios
   getUsuarios(): Observable<any[]> {
@@ -28,7 +158,7 @@ export class ApiService {
     return this.http.put(`${this.baseUrl}/usuario/editUsuarioPorId`, usuario);
   }
 
-  deleteUsuario(id: string): Observable<any> {
+  deleteUsuario(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/usuario/deleteUsuarioPorId`, { body: { id } });
   }
 
@@ -135,22 +265,10 @@ export class ApiService {
     return this.http.put(`${this.baseUrl}/membresia/editarMembresia`, membresia);
   }
 
-
-
-  // Método para manejar errores
-  private handleError(error: any): Observable<never> {
-    console.error('Ocurrió un error:', error);
-    return throwError(() => new Error('Error en la solicitud HTTP'));
-  }
-
-  // Método para autenticación (si lo necesitas)
-  login(credentials: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/usuario/auth`, credentials).pipe(
-      tap(response => {
-        if (response.result === 'ok') {
-          localStorage.setItem('jwt', response.jwt);
-        }
-      })
-    );
-  }
 }
+
+
+
+
+
+

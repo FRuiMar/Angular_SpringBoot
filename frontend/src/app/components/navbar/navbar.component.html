@@ -1,31 +1,66 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" routerLink="/">Inicio</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item" *ngIf="!isLoggedIn">
-                    <a class="nav-link" routerLink="/login">Login</a>
-                </li>
-                <li class="nav-item" *ngIf="!isLoggedIn">
-                    <a class="nav-link" routerLink="/register">Register</a>
+<nav class="px-4 py-3 shadow navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand d-flex align-items-center" routerLink="/">
+        <img src="../../../assets/images/logo.png" width="40" height="30" class="me-2" alt="Logo" />
+        <span class="fw-bold">Forza Trainin Center</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="gap-3 navbar-nav ms-auto align-items-center">
+            <!-- Solo se muestra si el usuario está autenticado -->
+            <li *ngIf="isAuthenticated" class="nav-item">
+                <a class="rounded nav-link text-bg-light" routerLink="/clases"><strong>Clases</strong></a>
+            </li>
+
+            <!-- Secciones visibles solo para administradores -->
+            <li *ngIf="isAdmin" class="nav-item">
+                <a class="rounded nav-link text-bg-warning" routerLink="/users"><strong>Usuarios</strong></a>
+            </li>
+            <li *ngIf="isAdmin" class="nav-item">
+                <a class="rounded nav-link text-bg-warning" routerLink="/entrenadores"><strong>Entrenadores</strong></a>
+            </li>
+
+            <!-- Solo se muestra si el usuario está autenticado -->
+            <li *ngIf="isAuthenticated" class="nav-item">
+                <a class="rounded nav-link text-bg-light" routerLink="/reservas"><strong>Tus Clases</strong></a>
+            </li>
+
+            <!-- Usuario autenticado -->
+            <li *ngIf="isAuthenticated" class="nav-item dropdown">
+                <a class="text-white nav-link dropdown-toggle ms-4" href="#" id="userDropdown" role="button"
+                    data-bs-toggle="dropdown">
+                    Hola,
+                    <strong>{{
+                        isAdmin ? "Administrador " + user?.nombre : user?.nombre
+                        }}</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li>
+                        <button class="text-dark dropdown-item" routerLink="/perfil">
+                            Ver perfil
+                        </button>
+                    </li>
+                    <li>
+                        <button class="text-dark dropdown-item" (click)="logout()">
+                            Cerrar sesión
+                        </button>
+                    </li>
+                </ul>
+            </li>
+
+            <!-- Invitado -->
+            <ng-container *ngIf="!isAuthenticated">
+                <li class="nav-item">
+                    <a class="text-white nav-link me-1" routerLink="/login">Iniciar sesión</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/clases">Clases</a>
+                    <a class="text-white nav-link" routerLink="/registro">Registrarse</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/users">Usuarios</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/entrenadores">Entrenadores</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/reservas">Tus Clases</a>
-                </li>
-            </ul>
-        </div>
+            </ng-container>
+        </ul>
     </div>
 </nav>

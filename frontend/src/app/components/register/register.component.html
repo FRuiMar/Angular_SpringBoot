@@ -11,28 +11,52 @@
                     </p>
 
                     <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
-                        <!-- Nombre y Apellidos -->
+                        <!-- DNI -->
+                        <div class="mb-3">
+                            <label for="dni" class="form-label">DNI:</label>
+                            <input type="text" class="form-control" id="dni" formControlName="dni"
+                                placeholder="Introduzca su DNI" />
+                            <small *ngIf="registroForm.get('dni')?.errors?.['required']" class="text-danger">
+                                El DNI es obligatorio.
+                            </small>
+                            <small
+                                *ngIf="registroForm.get('dni')?.errors?.['minlength'] || registroForm.get('dni')?.errors?.['maxlength']"
+                                class="text-danger">
+                                El DNI debe tener 9 caracteres.
+                            </small>
+                        </div>
+
+                        <!-- Nombre y Apellido -->
                         <div class="mb-3 row">
                             <div class="col-md-6">
                                 <label for="nombre" class="form-label">Nombre:</label>
                                 <input type="text" class="form-control" id="nombre" formControlName="nombre"
                                     placeholder="Introduzca su nombre" />
+                                <small *ngIf="registroForm.get('nombre')?.errors?.['required']" class="text-danger">
+                                    El nombre es obligatorio.
+                                </small>
                             </div>
                             <div class="col-md-6">
-                                <label for="apellidos" class="form-label">Apellidos:</label>
-                                <input type="text" class="form-control" id="apellidos" formControlName="apellidos"
-                                    placeholder="Introduzca sus apellidos" />
+                                <label for="apellido" class="form-label">Apellido:</label>
+                                <input type="text" class="form-control" id="apellido" formControlName="apellido"
+                                    placeholder="Introduzca su apellido" />
+                                <small *ngIf="registroForm.get('apellido')?.errors?.['required']" class="text-danger">
+                                    El apellido es obligatorio.
+                                </small>
                             </div>
                         </div>
 
-
-                        <!-- Email e Imagen -->
-                        <div class="mb-3 row">
-                            <div class="col-md-6">
-                                <label for="email" class="form-label">Correo electrónico:</label>
-                                <input type="email" class="form-control" id="email" formControlName="email"
-                                    placeholder="usuario@gmail.com" />
-                            </div>
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Correo electrónico:</label>
+                            <input type="email" class="form-control" id="email" formControlName="email"
+                                placeholder="usuario@gmail.com" />
+                            <small *ngIf="registroForm.get('email')?.errors?.['required']" class="text-danger">
+                                El email es obligatorio.
+                            </small>
+                            <small *ngIf="registroForm.get('email')?.errors?.['email']" class="text-danger">
+                                Introduce un email válido.
+                            </small>
                         </div>
 
                         <!-- Contraseña y Confirmar Contraseña -->
@@ -41,17 +65,44 @@
                                 <label for="password" class="form-label">Contraseña:</label>
                                 <input type="password" class="form-control" id="password" formControlName="password"
                                     placeholder="Mínimo 5 caracteres" />
+                                <small *ngIf="registroForm.get('password')?.errors?.['required']" class="text-danger">
+                                    La contraseña es obligatoria.
+                                </small>
+                                <small *ngIf="registroForm.get('password')?.errors?.['minlength']" class="text-danger">
+                                    La contraseña debe tener al menos 5 caracteres.
+                                </small>
                             </div>
                             <div class="col-md-6">
                                 <label for="confirmPassword" class="form-label">Confirmar Contraseña:</label>
                                 <input type="password" class="form-control" id="confirmPassword"
                                     formControlName="confirmPassword" placeholder="Repita la contraseña" />
+                                <small *ngIf="registroForm.get('confirmPassword')?.errors?.['required']"
+                                    class="text-danger">
+                                    Confirma la contraseña.
+                                </small>
+                                <small *ngIf="registroForm.errors?.['passwordsNotMatching']" class="text-danger">
+                                    Las contraseñas no coinciden.
+                                </small>
                             </div>
+                        </div>
+
+                        <!-- Selección de Membresía -->
+                        <div class="mb-3">
+                            <label for="membresia" class="form-label">Membresía:</label>
+                            <select class="form-control" id="membresia" formControlName="membresia">
+                                <option value="">Seleccione una membresía</option>
+                                <option *ngFor="let membresia of membresias" [value]="membresia.id">
+                                    {{ membresia.tipo }} - {{ membresia.precio }} €
+                                </option>
+                            </select>
+                            <small *ngIf="registroForm.get('membresia')?.errors?.['required']" class="text-danger">
+                                Selecciona una membresía.
+                            </small>
                         </div>
 
                         <!-- Botón de registro -->
                         <div class="gap-2 d-grid">
-                            <button type="submit" class="mt-3 btn btn-primary">
+                            <button type="submit" class="mt-3 btn btn-primary" [disabled]="registroForm.invalid">
                                 Registrarse
                             </button>
                         </div>
