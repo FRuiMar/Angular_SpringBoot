@@ -80,4 +80,17 @@ export class ReservasComponent implements OnInit {
       });
     }
   }
+
+  borrarReserva(id: number): void {
+    if (confirm('¿Estás seguro de que deseas borrar esta reserva?')) {
+      this.apiService.deleteReserva(id).subscribe({
+        next: () => {
+          alert('Reserva eliminada con éxito');
+          this.reservasCombinadas = this.reservasCombinadas.filter(reserva => reserva.id !== id);
+        },
+        error: (error) => console.error('Error al borrar la reserva:', error)
+      });
+    }
+  }
+
 }

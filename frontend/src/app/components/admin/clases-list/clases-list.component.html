@@ -1,0 +1,48 @@
+<div class="container mt-4">
+    <!-- Botón para Crear Clase -->
+    <div class="mb-4">
+        <button class="btn btn-success" (click)="abrirFormulario()">
+            <i class="fas fa-plus"></i> Crear Actividad
+        </button>
+    </div>
+
+    <!-- Lista de Clases -->
+    <h2 class="mb-4 lista-usuarios-titulo">Lista de Actividades del Gimnasio</h2>
+    <table class="table table-striped table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Horario</th>
+                <th scope="col">Entrenador</th>
+                <th scope="col">Capacidad</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (clase of clases; track clase.id) {
+            <tr>
+                <td>{{ clase.id }}</td>
+                <td>{{ clase.nombre }}</td>
+                <td>{{ clase.horario }}</td>
+                <td>{{ clase.entrenador }}</td>
+                <td>{{ clase.capacidad_maxima }} personas</td>
+                <td>
+                    <button class="btn btn-primary btn-sm me-2" (click)="abrirModalEditar(clase)">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button class="btn btn-danger btn-sm" (click)="borrarClase(clase.id)">
+                        <i class="fas fa-trash"></i> Borrar
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (clases.length === 0) {
+    <div class="alert alert-info">
+        No hay clases registradas.
+    </div>
+    }
+</div>

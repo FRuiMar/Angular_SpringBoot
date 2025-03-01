@@ -1,0 +1,50 @@
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="shadow-lg card">
+                <div class="card-body">
+                    <h2 class="mb-4 text-center">Crear Nueva Actividad</h2>
+
+                    <form (ngSubmit)="onSubmit()">
+                        <!-- Nombre de la Actividad -->
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre de la Actividad</label>
+                            <input type="text" class="form-control" id="nombre" [(ngModel)]="nuevaClase.nombre"
+                                name="nombre" required>
+                        </div>
+
+                        <!-- Horario (fecha y hora actual) -->
+                        <div class="mb-3">
+                            <label for="horario" class="form-label">Horario</label>
+                            <input type="datetime-local" class="form-control" id="horario"
+                                [(ngModel)]="nuevaClase.horario" name="horario" required>
+                        </div>
+
+                        <!-- Entrenador (desplegable) -->
+                        <div class="mb-3">
+                            <label for="entrenadores" class="form-label">Entrenador</label>
+                            <select class="form-select" id="entrenadores" [(ngModel)]="nuevaClase.entrenadores"
+                                name="entrenadores" required>
+                                <option *ngFor="let entrenador of entrenadores" [value]="entrenador.id">{{
+                                    entrenador.nombre }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Capacidad Máxima -->
+                        <div class="mb-3">
+                            <label for="capacidadMaxima" class="form-label">Capacidad Máxima</label>
+                            <input type="number" class="form-control" id="capacidadMaxima"
+                                [(ngModel)]="nuevaClase.capacidadMaxima" name="capacidadMaxima" required>
+                        </div>
+
+                        <!-- Botón para Crear -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success">Crear Actividad</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

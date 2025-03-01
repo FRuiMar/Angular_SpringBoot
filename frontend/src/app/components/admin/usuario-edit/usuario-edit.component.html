@@ -1,0 +1,74 @@
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6"> <!-- Reducido de col-md-8 a col-md-6 -->
+            <div class="shadow-lg card">
+                <div class="card-body">
+                    <h2 class="mb-4 text-center">Editar Usuario</h2>
+
+                    <form (ngSubmit)="onSubmit()">
+                        <input type="hidden" [(ngModel)]="usuario.id" name="id">
+
+                        <!-- DNI (Solo lectura) -->
+                        <div class="mb-3">
+                            <label for="dni" class="form-label">DNI</label>
+                            <input type="text" class="form-control" id="dni" [value]="usuario.dni" disabled>
+                            <input type="hidden" [(ngModel)]="usuario.dni" name="dni">
+                        </div>
+
+                        <!-- Nombre -->
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" [(ngModel)]="usuario.nombre"
+                                name="nombre" required>
+                        </div>
+
+                        <!-- Apellido -->
+                        <div class="mb-3">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="apellido" [(ngModel)]="usuario.apellido"
+                                name="apellido" required>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" [(ngModel)]="usuario.email" name="email"
+                                required>
+                        </div>
+
+                        <!-- Rol -->
+                        <div class="mb-3">
+                            <label for="rol" class="form-label">Rol</label>
+                            <div class="d-flex align-items-center">
+                                <input type="text" id="rol" class="form-control w-50 me-2 flex-grow-0"
+                                    [value]="usuario.rol" disabled>
+                                <button type="button" class="btn btn-warning btn-sm" (click)="cambiarRol()">
+                                    <i class="bi bi-arrow-repeat"></i> Cambiar Rol
+                                </button>
+
+                            </div>
+                            <input type="hidden" [(ngModel)]="usuario.rol" name="rol">
+                        </div>
+
+                        <!-- Membresía -->
+                        <div class="mb-3">
+                            <label for="membresia" class="form-label">Membresía</label>
+                            <select id="membresia" class="form-select" [(ngModel)]="usuario.membresia" name="membresia"
+                                required>
+                                <option *ngFor="let mem of listaMembresias" [value]="mem.id">
+                                    {{ mem.tipo }} - {{ mem.precio | currency:'EUR' }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

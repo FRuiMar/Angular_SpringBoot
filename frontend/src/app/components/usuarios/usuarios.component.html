@@ -1,13 +1,13 @@
 <div class="container mt-4">
     <!-- Botón para Crear Usuario -->
     <div class="mb-4">
-        <button class="btn btn-success" (click)="abrirModalCrear()">
+        <button class="btn btn-success" (click)="abrirFormulario()">
             <i class="fas fa-plus"></i> Crear Usuario
         </button>
     </div>
 
     <!-- Lista de Usuarios -->
-    <h2 class="mb-4">Lista de Usuarios</h2>
+    <h2 class="mb-4 lista-usuarios-titulo">Lista de Usuarios</h2>
     <table class="table table-striped table-hover">
         <thead class="thead-dark">
             <tr>
@@ -41,11 +41,11 @@
                 </td>
                 <td>{{ usuario.membresia }}</td>
                 <td>
-                    <button class="btn btn-primary btn-sm me-2" (click)="abrirModalEditar(usuario)">
-                        <i class="fas fa-edit"></i> Editar
+                    <button class="btn btn-warning btn-sm me-2" (click)="abrirModalEditar(usuario)">
+                        <i class="bi bi-pencil-square"></i> Editar
                     </button>
                     <button class="btn btn-danger btn-sm" (click)="borrarUsuario(usuario.id)">
-                        <i class="fas fa-trash"></i> Borrar
+                        <i class="bi bi-trash3"></i> Borrar
                     </button>
                 </td>
             </tr>
@@ -59,124 +59,4 @@
     </div>
     }
 
-    <!-- Modal para Crear Usuario -->
-    @if (mostrarModalCrear) {
-    <div class="modal-backdrop">
-        <div class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Crear Usuario</h3>
-                    <button class="btn btn-close" (click)="cerrarModalCrear()">X</button>
-                </div>
-                <div class="modal-body">
-                    <form (ngSubmit)="crearUsuario()">
-                        <div class="mb-3">
-                            <label for="dni" class="form-label">DNI</label>
-                            <input type="text" class="form-control" id="dni" [(ngModel)]="nuevoUsuario.dni" name="dni"
-                                required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" [(ngModel)]="nuevoUsuario.nombre"
-                                name="nombre" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="apellido" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="apellido" [(ngModel)]="nuevoUsuario.apellido"
-                                name="apellido" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" [(ngModel)]="nuevoUsuario.email"
-                                name="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="pass" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="pass" [(ngModel)]="nuevoUsuario.pass"
-                                name="pass" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="rol" class="form-label">Rol</label>
-                            <select class="form-control" id="rol" [(ngModel)]="nuevoUsuario.rol" name="rol" required>
-                                <option value="NORMAL">NORMAL</option>
-                                <option value="ADMIN">ADMIN</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="membresia" class="form-label">Membresía</label>
-                            <select class="form-control" id="membresia" [(ngModel)]="nuevoUsuario.membresia"
-                                name="membresia" required>
-                                @for (membresia of membresias; track membresia.id) {
-                                <option [value]="membresia.id">{{ membresia.tipo }}</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary"
-                                (click)="cerrarModalCrear()">Cancelar</button>
-                            <button type="submit" class="btn btn-success">Crear Usuario</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    }
-
-    <!-- Modal para Editar Usuario -->
-    @if (mostrarModalEditar) {
-    <div class="modal-backdrop">
-        <div class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Editar Usuario</h3>
-                    <button class="btn btn-close" (click)="cerrarModalEditar()">x</button>
-                </div>
-                <div class="modal-body">
-                    <form (ngSubmit)="guardarCambios()">
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" [(ngModel)]="usuarioEditando.nombre"
-                                name="nombre" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="apellido" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="apellido" [(ngModel)]="usuarioEditando.apellido"
-                                name="apellido" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" [(ngModel)]="usuarioEditando.email"
-                                name="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="rol" class="form-label">Rol</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="rol" [(ngModel)]="usuarioEditando.rol"
-                                    name="rol" disabled>
-                                <button type="button" class="btn btn-secondary" (click)="cambiarRol()">
-                                    Cambiar Rol
-                                </button>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="membresia" class="form-label">Membresía</label>
-                            <select class="form-control" id="membresia" [(ngModel)]="usuarioEditando.membresia"
-                                name="membresia" required>
-                                @for (membresia of membresias; track membresia.id) {
-                                <option [value]="membresia.id">{{ membresia.tipo }}</option>
-                                }
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary"
-                                (click)="cerrarModalEditar()">Cancelar</button>
-                            <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    }
 </div>

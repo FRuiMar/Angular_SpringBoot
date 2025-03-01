@@ -1,33 +1,54 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
-import { CommonModule } from '@angular/common'; // Para usar *ngFor
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-entrenadores',
-  standalone: true,
-  imports: [
-    CommonModule, // Necesario para *ngFor
-  ],
   templateUrl: './entrenadores.component.html',
-  styleUrl: './entrenadores.component.css'
+  styleUrls: ['./entrenadores.component.css'],
+  standalone: true,
+  imports: [CommonModule]
 })
 export class EntrenadoresComponent implements OnInit {
-  entrenadores: any[] = []; // Array para almacenar los entrenadores
+  entrenadores: any[] = [];
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, private router: Router) { }
 
   ngOnInit(): void {
-    this.obtenerEntrenadores(); // Llama al método para obtener entrenadores al inicializar el componente
+    this.cargarEntrenadores();
   }
 
-  obtenerEntrenadores(): void {
-    this.apiService.getEntrenadores().subscribe(
-      (data) => {
-        this.entrenadores = data; // Asigna los entrenadores obtenidos a la propiedad 'entrenadores'
+  cargarEntrenadores(): void {
+    this.apiService.getEntrenadores().subscribe({
+      next: (data) => {
+        this.entrenadores = data;
       },
-      (error) => {
-        console.error('Error al obtener entrenadores', error); // Manejo de errores
+      error: (error) => {
+        console.error('Error al cargar los entrenadores:', error);
       }
-    );
+    });
+  }
+
+  abrirModalCrear(): void {
+    this.router.navigate(['/entrenadores/create']);
+  }
+
+  abrirModalEditar(entrenador: any): void {
+    this.router.navigate(['/entrenadores/edit', entrenador.id]);
+  }
+
+  borrarEntrenador(id: number): void {
+    if (confirm('¿Estás seguro de que quieres borrar este entrenador?')) {
+      this.apiService.deleteEntrenador(id.toString()).subscribe({
+        next: () => {
+          console.log('Entrenador borrado');
+          this.cargarEntrenadores();
+        },
+        error: (error) => {
+          console.error('Error al borrar el entrenador:', error);
+        }
+      });
+    }
   }
 }

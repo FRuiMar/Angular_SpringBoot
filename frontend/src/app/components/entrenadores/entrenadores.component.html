@@ -1,20 +1,52 @@
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Especialidad</th>
-            <th>Experiencia</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let entrenador of entrenadores">
-            <td>{{ entrenador.id }}</td>
-            <td>{{ entrenador.nombre }}</td>
-            <td>{{ entrenador.email }}</td>
-            <td>{{ entrenador.especialidad }}</td>
-            <td>{{ entrenador.experiencia }}</td>
-        </tr>
-    </tbody>
-</table>
+<div class="container mt-4">
+    <!-- Botón para Crear Entrenador -->
+    <div class="mb-4">
+        <button class="btn btn-success" (click)="abrirModalCrear()">
+            <i class="fas fa-plus"></i> Crear Entrenador
+        </button>
+    </div>
+
+    <!-- Lista de Entrenadores -->
+    <h2 class="mb-4 lista-entrenadores-titulo">Lista de Entrenadores</h2>
+    <table class="table table-striped table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">DNI</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">Especialidad</th>
+                <th scope="col">Imagen</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (entrenador of entrenadores; track entrenador.id) {
+            <tr>
+                <td>{{ entrenador.id }}</td>
+                <td>{{ entrenador.dni }}</td>
+                <td>{{ entrenador.nombre }}</td>
+                <td>{{ entrenador.apellido }}</td>
+                <td>{{ entrenador.especialidad }}</td>
+                <td>
+                    <p>"Imagen de {{ entrenador.nombre }}" </p>
+                </td>
+                <td>
+                    <button class="btn btn-primary btn-sm me-2" (click)="abrirModalEditar(entrenador)">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                    <button class="btn btn-danger btn-sm" (click)="borrarEntrenador(entrenador.id)">
+                        <i class="fas fa-trash"></i> Borrar
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (entrenadores.length === 0) {
+    <div class="alert alert-info">
+        No hay entrenadores registrados.
+    </div>
+    }
+</div>

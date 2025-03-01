@@ -1,0 +1,54 @@
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="shadow-lg card">
+                <div class="card-body">
+                    <h2 class="mb-4 text-center">Crear Entrenador</h2>
+
+                    <form (ngSubmit)="onSubmit()">
+                        <!-- DNI -->
+                        <div class="mb-3">
+                            <label for="dni" class="form-label">DNI</label>
+                            <input type="text" class="form-control" id="dni" [(ngModel)]="entrenador.dni" name="dni"
+                                required>
+                        </div>
+
+                        <!-- Nombre -->
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" [(ngModel)]="entrenador.nombre"
+                                name="nombre" required>
+                        </div>
+
+                        <!-- Apellido -->
+                        <div class="mb-3">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="apellido" [(ngModel)]="entrenador.apellido"
+                                name="apellido" required>
+                        </div>
+
+                        <!-- Especialidad -->
+                        <div class="mb-3">
+                            <label for="especialidad" class="form-label">Especialidad</label>
+                            <input type="text" class="form-control" id="especialidad"
+                                [(ngModel)]="entrenador.especialidad" name="especialidad" required>
+                        </div>
+
+                        <!-- Imagen -->
+                        <div class="mb-3">
+                            <label for="imagen" class="form-label">Imagen (URL)</label>
+                            <input type="text" class="form-control" id="imagen" [(ngModel)]="entrenador.imagen"
+                                name="imagen">
+                        </div>
+
+                        <!-- Botón para Guardar -->
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-success">Crear Entrenador</button>
+                            <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

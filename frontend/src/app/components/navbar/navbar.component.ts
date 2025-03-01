@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterLink } from '@angular/router'; // Importa Router y sus directivas
 import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
@@ -20,9 +20,10 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.apiService.user$.subscribe(user => {
       console.log('Usuario logueado:', user); // Verificar que se está recibiendo el usuario
+      console.log('Rol del usuario:', user?.rol); // Verificar el rol del usuario
       this.user = user;
       this.isAuthenticated = !!user;
-      this.isAdmin = user?.rol === 'admin';
+      this.isAdmin = user?.rol.toLowerCase() === 'admin';
     });
 
     // Verifica que se obtenga el usuario autenticado al inicializar

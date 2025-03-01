@@ -53,21 +53,7 @@ export class LoginComponent {
     });
   }
 
-  // getUserData(): void {
-  //   this.apiService.getAuthenticatedUser().subscribe({
-  //     next: (response) => {
-  //       if (response.result === 'ok') {
-  //         this.apiService.saveUserData(localStorage.getItem('jwt')!, response);
-  //         this.router.navigate(['/']);
-  //       } else {
-  //         this.errorMessage = 'Error al obtener los datos del usuario.';
-  //       }
-  //     },
-  //     error: () => {
-  //       this.errorMessage = 'Error al obtener los datos del usuario.';
-  //     },
-  //   });
-  // }
+
 
   getUserData(): void {
     if (typeof localStorage !== 'undefined') {

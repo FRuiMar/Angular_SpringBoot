@@ -1,7 +1,7 @@
 <nav class="px-4 py-3 shadow navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand d-flex align-items-center" routerLink="/">
-        <img src="../../../assets/images/logo.png" width="40" height="30" class="me-2" alt="Logo" />
-        <span class="fw-bold">Forza Trainin Center</span>
+        <img src="assets/img/logo/Forza64_2.png" width="65" height="65" class="me-2" alt="Logo" />
+        <span class="fw-bold">Forza Training Center</span>
     </a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -11,39 +11,46 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="gap-3 navbar-nav ms-auto align-items-center">
-            <!-- Solo se muestra si el usuario está autenticado -->
-            <li *ngIf="isAuthenticated" class="nav-item">
-                <a class="rounded nav-link text-bg-light" routerLink="/clases"><strong>Clases</strong></a>
+            <!-- Para todos menos admin -->
+            <li *ngIf="!isAdmin" class="nav-item">
+                <a class="rounded nav-link text-bg-light" routerLink="/clases"><strong>Nuestras Actividades</strong></a>
             </li>
 
-            <!-- Secciones visibles solo para administradores -->
-            <li *ngIf="isAdmin" class="nav-item">
-                <a class="rounded nav-link text-bg-warning" routerLink="/users"><strong>Usuarios</strong></a>
+            <!-- Si es Admin -->
+            <li *ngIf="isAuthenticated && isAdmin" class="nav-item">
+                <a class="rounded nav-link  text-bg-danger" routerLink="/users"><strong>Clientes</strong></a>
             </li>
-            <li *ngIf="isAdmin" class="nav-item">
-                <a class="rounded nav-link text-bg-warning" routerLink="/entrenadores"><strong>Entrenadores</strong></a>
+            <li *ngIf="isAuthenticated && isAdmin" class="nav-item">
+                <a class="rounded nav-link  text-bg-danger" routerLink="/entrenadores"><strong>Entrenadores</strong></a>
+            </li>
+            <li *ngIf="isAuthenticated && isAdmin" class="nav-item">
+                <a class="rounded nav-link  text-bg-danger" routerLink="/clases/list"><strong>Actividades</strong></a>
+            </li>
+            <li *ngIf="isAuthenticated && isAdmin" class="nav-item">
+                <a class="rounded nav-link  text-bg-danger" routerLink="/reservas"><strong>Reservas</strong></a>
             </li>
 
-            <!-- Solo se muestra si el usuario está autenticado -->
-            <li *ngIf="isAuthenticated" class="nav-item">
-                <a class="rounded nav-link text-bg-light" routerLink="/reservas"><strong>Tus Clases</strong></a>
+            <!-- Si está autenticado y no es admin -->
+            <li *ngIf="isAuthenticated && !isAdmin" class="nav-item">
+                <a class="rounded nav-link text-bg-light" routerLink="/reservas/usuario"><strong>Tus
+                        Clases</strong></a>
             </li>
 
-            <!-- Usuario autenticado -->
+            <!-- Si está autenticado -->
             <li *ngIf="isAuthenticated" class="nav-item dropdown">
                 <a class="text-white nav-link dropdown-toggle ms-4" href="#" id="userDropdown" role="button"
                     data-bs-toggle="dropdown">
                     Hola,
                     <strong>{{
-                        isAdmin ? "Administrador " + user?.nombre : user?.nombre
+                        isAdmin ? "(Admin) " + user?.nombre : user?.nombre
                         }}</strong>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li>
+                    <!-- <li>
                         <button class="text-dark dropdown-item" routerLink="/perfil">
                             Ver perfil
                         </button>
-                    </li>
+                    </li> -->
                     <li>
                         <button class="text-dark dropdown-item" (click)="logout()">
                             Cerrar sesión
@@ -52,13 +59,13 @@
                 </ul>
             </li>
 
-            <!-- Invitado -->
+            <!-- Sin Autenticar -->
             <ng-container *ngIf="!isAuthenticated">
                 <li class="nav-item">
                     <a class="text-white nav-link me-1" routerLink="/login">Iniciar sesión</a>
                 </li>
                 <li class="nav-item">
-                    <a class="text-white nav-link" routerLink="/registro">Registrarse</a>
+                    <a class="text-white nav-link" routerLink="/register">Registrarse</a>
                 </li>
             </ng-container>
         </ul>

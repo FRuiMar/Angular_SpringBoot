@@ -1,0 +1,37 @@
+.home-container {
+  height: 80vh; /* Ocupa el 80% de la altura de la ventana */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Cambia el centrado vertical */
+  color: white; /* Color del texto por defecto */
+  text-align: center;
+  padding-top: 100px; /* Ajusta este valor para mover el contenido hacia arriba */
+}
+
+.welcome-message h1 {
+  margin: 0; /* Elimina el margen por defecto de los h1 */
+}
+
+.forza {
+  color: red; /* Color rojo para "FORZA" */
+  font-size: 7rem;
+  display: block; /* Hace que "FORZA" ocupe su propia línea */
+  text-shadow: -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black,
+    2px 2px 0 black; /* Contorno más grueso */
+}
+
+.training-center {
+  color: white; /* Color blanco para "Training Center" */
+  font-size: 5rem;
+  display: block; /* Hace que "Training Center" ocupe su propia línea */
+  text-shadow: -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black,
+    2px 2px 0 black; /* Contorno más grueso */
+}
+
+.bienvenidos {
+  padding-top: 100px;
+  font-size: 4rem; /* Tamaño más pequeño para "¡Bienvenidos!" */
+  margin-top: 20px; /* Espacio entre "Training Center" y "¡Bienvenidos!" */
+  text-shadow: -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black,
+    2px 2px 0 black; /* Contorno más grueso */
+}

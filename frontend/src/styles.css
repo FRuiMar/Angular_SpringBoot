@@ -1,1 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  background-image: url("assets/img/fondos/Fondo3.jpg"); /* Ruta de tu imagen */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Para que el fondo sea estático */
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  font-family: Arial, sans-serif; /* Opcional: Define una fuente global */
+}

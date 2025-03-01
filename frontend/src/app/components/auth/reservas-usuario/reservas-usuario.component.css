@@ -1,0 +1,7 @@
+.lista-usuarios-titulo {
+  text-align: center;
+  color: white;
+  font-size: 2.5em;
+  text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
+    1px 1px 0 black; /* Contorno más grueso */
+}
