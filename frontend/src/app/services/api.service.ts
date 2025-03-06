@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
@@ -20,29 +20,43 @@ export class ApiService {
     @Inject(PLATFORM_ID) private platformId: Object,
     private router: Router // Inyecta Router para redirecciones
   ) {
-    // Verifica si el código se ejecuta en el navegador y si localStorage está disponible
+    // // Verifica si el código se ejecuta en el navegador y si localStorage está disponible
+    // if (isPlatformBrowser(this.platformId)) {
+    //   const user = this.getUserFromLocalStorage(); // Obtén el usuario desde localStorage
+    //   if (user) {
+    //     this.userSubject.next(user); // Actualiza el BehaviorSubject con el usuario
+    //   }
+    // }
+  }
+
+  initializeUser(): void {
     if (isPlatformBrowser(this.platformId)) {
-      const user = this.getUserFromLocalStorage(); // Obtén el usuario desde localStorage
-      if (user) {
-        this.userSubject.next(user); // Actualiza el BehaviorSubject con el usuario
-      }
+      setTimeout(() => {
+        const user = this.getUserFromLocalStorage();
+        if (user) {
+          console.log('Usuario inicializado desde localStorage:', user);
+          this.userSubject.next(user);
+        }
+      }, 0);
     }
   }
 
   // Método para verificar si localStorage está disponible
   private isLocalStorageAvailable(): boolean {
-    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+    return isPlatformBrowser(this.platformId);
   }
 
   // Método para verificar si el token JWT es válido
   private isTokenValid(): boolean {
-    const token = localStorage.getItem('jwt');
-    if (!token) return false;
+    if (!this.isLocalStorageAvailable()) return false;
 
     try {
-      const payload = JSON.parse(atob(token.split('.')[1])); // Decodifica el payload del token
-      const expirationDate = new Date(payload.exp * 1000); // Convierte la fecha de expiración
-      return expirationDate > new Date(); // Devuelve true si el token no ha caducado
+      const token = localStorage.getItem('jwt');
+      if (!token) return false;
+
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expirationDate = new Date(payload.exp * 1000);
+      return expirationDate > new Date();
     } catch (error) {
       console.error('Error al verificar el token:', error);
       return false;
@@ -51,19 +65,31 @@ export class ApiService {
 
   // Método para incluir el token JWT en las cabeceras
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('jwt');
-    return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    if (!this.isLocalStorageAvailable()) {
+      return new HttpHeaders();
+    }
+
+    try {
+      const token = localStorage.getItem('jwt');
+      return token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
+    } catch (error) {
+      console.error('Error al obtener cabeceras de autenticación:', error);
+      return new HttpHeaders();
+    }
   }
 
   // Método para realizar el login
   login(credentials: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/usuario/auth`, credentials).pipe(
       tap((response) => {
-        if (response.result === 'ok' && this.isLocalStorageAvailable()) {
-          localStorage.setItem('jwt', response.jwt); // Guarda el token JWT en localStorage
+        if (response.result === 'ok') {
+          if (this.isLocalStorageAvailable()) {
+            localStorage.setItem('jwt', response.jwt);
+          }
+
           this.getAuthenticatedUser().subscribe({
             next: (user) => {
-              this.saveUserData(response.jwt, user); // Guarda los datos del usuario
+              this.saveUserData(response.jwt, user);
             },
             error: (error) => {
               console.error('Error al obtener el usuario autenticado:', error);
@@ -81,88 +107,94 @@ export class ApiService {
   // Método para obtener el usuario autenticado
   getAuthenticatedUser(): Observable<any> {
     if (!this.isLocalStorageAvailable()) {
-      console.error('localStorage no está disponible');
-      return throwError(() => new Error('localStorage no está disponible'));
+      console.log('localStorage no está disponible (SSR)');
+      return of(null); // IMPORTANTE: Devolver of(null) en lugar de throwError
     }
 
-    const token = localStorage.getItem('jwt');
-    if (!token) {
-      console.warn('No hay token disponible en localStorage');
-      return throwError(() => new Error('No hay token disponible'));
-    }
+    try {
+      const token = localStorage.getItem('jwt');
+      if (!token) {
+        console.warn('No hay token disponible en localStorage');
+        return of(null); // IMPORTANTE: Devolver of(null) en lugar de throwError
+      }
 
-    const headers = this.getAuthHeaders(); // Incluye el token en las cabeceras
-    return this.http.get<any>(`${this.baseUrl}/usuario/who`, { headers }).pipe(
-      tap((user) => {
-        console.log('✅ Usuario autenticado recibido:', user);
-        this.userSubject.next(user); // Actualiza el estado del usuario
-      }),
-      catchError((error) => {
-        console.error('Error al obtener el usuario autenticado:', error);
-        return throwError(() => error);
-      })
-    );
+      const headers = this.getAuthHeaders();
+      return this.http.get<any>(`${this.baseUrl}/usuario/who`, { headers }).pipe(
+        tap((user) => {
+          console.log('✅ Usuario autenticado recibido:', user);
+          this.userSubject.next(user);
+        }),
+        catchError((error) => {
+          console.error('Error al obtener el usuario autenticado:', error);
+          return throwError(() => error);
+        })
+      );
+    } catch (error) {
+      console.error('Error al acceder a localStorage:', error);
+      return of(null);
+    }
   }
 
   // Método para guardar el token y los datos del usuario en localStorage
   saveUserData(token: string, user: any): void {
+    // Siempre actualizar el estado en memoria
+    this.userSubject.next(user);
+
+    // Solo intentar guardar en localStorage si estamos en el navegador
     if (this.isLocalStorageAvailable()) {
       try {
         localStorage.setItem('jwt', token);
         localStorage.setItem('user', JSON.stringify(user));
         console.log('Datos del usuario guardados:', user);
-        this.userSubject.next(user); // Actualiza el estado del usuario
       } catch (error) {
         console.error('Error al guardar datos en localStorage:', error);
       }
-    } else {
-      console.warn('localStorage no está disponible en este entorno.');
     }
   }
 
   // Método para obtener el usuario desde localStorage
   getUserFromLocalStorage(): any {
-    if (this.isLocalStorageAvailable()) {
-      try {
-        const user = localStorage.getItem('user');
-        return user ? JSON.parse(user) : null;
-      } catch (error) {
-        console.error('Error al obtener datos de localStorage:', error);
-        return null;
-      }
+    if (!this.isLocalStorageAvailable()) {
+      return null;
     }
-    return null;
+
+    try {
+      const userStr = localStorage.getItem('user');
+      return userStr ? JSON.parse(userStr) : null;
+    } catch (error) {
+      console.error('Error al obtener datos de localStorage:', error);
+      return null;
+    }
   }
 
   // Método para cerrar sesión
-  logout(): void {
+  // Método para cerrar sesión con opción de redirección
+  logout(redirect: boolean = true): void {
+    // Siempre limpiar el estado en memoria
+    this.userSubject.next(null);
+
+    // Solo intentar limpiar localStorage si estamos en el navegador
     if (this.isLocalStorageAvailable()) {
       try {
         localStorage.removeItem('jwt');
         localStorage.removeItem('user');
-        this.userSubject.next(null); // Actualiza el estado del usuario a null
       } catch (error) {
         console.error('Error al eliminar datos de localStorage:', error);
       }
-    } else {
-      console.warn('localStorage no está disponible en este entorno.');
+    }
+
+    // Redirigir solo si se solicita
+    if (redirect) {
+      this.router.navigate(['']);
     }
   }
 
   // Método para crear una reserva
   createReserva(reserva: any): Observable<any> {
-    if (!this.isTokenValid()) {
-      this.logout(); // Cierra la sesión si el token no es válido
-      return throwError(() => new Error('Token JWT inválido o caducado'));
-    }
-
-    const headers = this.getAuthHeaders(); // Incluye el token en las cabeceras
-    return this.http.post(`${this.baseUrl}/reserva/addReserva`, reserva, { headers }).pipe(
-      catchError((error) => {
-        if (error.status === 401) {
-          this.logout(); // Cierra la sesión si el servidor devuelve un error de autenticación
-          this.router.navigate(['/login']); // Redirige al login
-        }
+    return this.http.post<any>(`${this.baseUrl}/reserva/addReserva`, reserva).pipe(
+      tap(response => console.log('Respuesta de creación de reserva:', response)),
+      catchError(error => {
+        console.error('Error al crear reserva:', error);
         return throwError(() => error);
       })
     );

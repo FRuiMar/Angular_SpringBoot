@@ -57,28 +57,47 @@ export class ClasesGymComponent implements OnInit {
 
   // Método para reservar una clase
   reservarClase(claseEntrenoId: number): void {
+    // Detener la propagación del evento click para que no se gire la tarjeta
+    event?.stopPropagation();
+
     if (!this.user) {
       // Si no está logueado, redirige al login
       this.router.navigate(['/login']);
-    } else {
-      // Si está logueado, crea la reserva
-      const reserva = {
-        usuarioId: this.user.id, // ID del usuario logueado
-        claseEntrenoId: claseEntrenoId, // ID de la clase de entrenamiento
-        fechaReserva: new Date().toISOString(), // Fecha actual en formato ISO 8601
-      };
-
-      this.apiService.createReserva(reserva).subscribe(
-        (response) => {
-          console.log('Reserva creada:', response);
-          alert('Reserva creada con éxito'); // Feedback al usuario
-        },
-
-        (error) => {
-          console.error('Error al crear la reserva:', error);
-          alert('Error al crear la reserva'); // Feedback al usuario
-        }
-      );
+      return;
     }
+
+    console.log('Intentando reservar clase:', claseEntrenoId, 'para usuario:', this.user.id);
+
+    // Verificar que tenemos los datos necesarios
+    if (!this.user.id || !claseEntrenoId) {
+      console.error('Faltan datos necesarios para la reserva');
+      alert('Error: Faltan datos necesarios para realizar la reserva');
+      return;
+    }
+
+    // Si está logueado, crea la reserva con el formato que espera el backend
+    const reserva = {
+      fechaReserva: new Date(), // El backend espera un objeto Date, no un string
+      usuarioId: this.user.id,
+      claseEntrenoId: claseEntrenoId
+    };
+
+    console.log('Datos de reserva a enviar:', reserva);
+
+    // Llamar al servicio para crear la reserva
+    this.apiService.createReserva(reserva).subscribe({
+      next: (response) => {
+        console.log('Respuesta del servidor:', response);
+        if (response && response.result === 'ok') {
+          alert('Reserva creada con éxito');
+        } else {
+          alert('Error al crear la reserva: ' + (response?.message || 'Respuesta desconocida'));
+        }
+      },
+      error: (error) => {
+        console.error('Error al crear la reserva:', error);
+        alert('Error al crear la reserva. Por favor, inténtalo de nuevo.');
+      }
+    });
   }
 }

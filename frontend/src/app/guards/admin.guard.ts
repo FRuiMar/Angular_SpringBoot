@@ -8,7 +8,7 @@ export const AdminGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   const user = apiService.getUserFromLocalStorage();
-  if (!user || user.rol !== 'admin') {
+  if (!user || user.rol !== 'ADMIN') {
     router.navigate(['/']);
     return false;
   }

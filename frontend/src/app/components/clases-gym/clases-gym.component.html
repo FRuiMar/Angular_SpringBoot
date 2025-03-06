@@ -18,12 +18,13 @@
                     <div class="flip-card-back card">
                         <div class="card-body">
                             <h5 class="card-title">{{ clase.nombre }}</h5>
+                            <p class="card-text"><strong>ID:</strong> {{ clase.id }}</p>
+                            <!-- Añadir esto para verificar -->
                             <p class="card-text"><strong>Horario:</strong> {{ clase.horario }}</p>
                             <p class="card-text"><strong>Entrenador:</strong> {{ clase.entrenador }}</p>
                             <p class="card-text"><strong>Capacidad:</strong> {{ clase.capacidad }} personas</p>
                             <!-- Botón RESERVAR -->
-                            <button class="btn btn-primary"
-                                (click)="reservarClase(clase.entrenadorId); $event.stopPropagation()">
+                            <button class="btn btn-primary" (click)="reservarClase(clase.id); $event.stopPropagation()">
                                 RESERVAR
                             </button>
                         </div>

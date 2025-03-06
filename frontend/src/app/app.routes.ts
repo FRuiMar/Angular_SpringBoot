@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-
+import { AuthGuard } from './guards/auth.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
@@ -15,31 +16,96 @@ import { EntrenadorCreateComponent } from './components/admin/entrenador-create/
 import { EntrenadorEditComponent } from './components/admin/entrenador-edit/entrenador-edit.component';
 import { UsuarioEditComponent } from './components/admin/usuario-edit/usuario-edit.component';
 import { ReservasUsuarioComponent } from './components/auth/reservas-usuario/reservas-usuario.component';
-
+import { UsuarioCreateComponent } from './components/admin/usuario-create/usuario-create.component';
 
 
 export const routes: Routes = [
-
-  { path: '', component: HomeComponent }, // Home
-
+  // Rutas públicas (accesibles para todos)
+  { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'usuarios/register', component: RegisterComponent },
-  { path: 'usuarios/editar/:id', component: UsuarioEditComponent },
-  { path: 'users', component: UsuariosComponent }, //NOTA PARA MI:  luego lo cambio porque puedo usar usuarios que ya tenía. User y usuarios es lo mismo.
-  { path: 'usuarios', component: UsuariosComponent },
-
-  { path: 'entrenadores', component: EntrenadoresComponent },
-  { path: 'entrenadores/create', component: EntrenadorCreateComponent },
-  { path: 'entrenadores/edit/:id', component: EntrenadorEditComponent },
-
   { path: 'clases', component: ClasesGymComponent },
-  { path: 'clases/create', component: ClasesCreateComponent },
-  { path: 'clases/edit/:id', component: ClasesEditComponent },
-  { path: 'clases/list', component: ClasesListComponent },
 
-  { path: 'reservas', component: ReservasComponent },
-  { path: 'reservas/usuario', component: ReservasUsuarioComponent },
+
+
+  // ACCESO USUARIO AUTENTICADO (poder hacer reservas)
+  {
+    path: 'reservas/usuario',
+    component: ReservasUsuarioComponent,
+    canActivate: [AuthGuard]
+  },
+
+
+  // ACCESO SOLO ADMINISTRADOR
+  //Gestión de usuarios (administrador)
+  {
+    path: 'usuarios',
+    component: UsuariosComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'usuarios/register',
+    component: RegisterComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'usuarios/editar/:id',
+    component: UsuarioEditComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'usuarios/create',
+    component: UsuarioCreateComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'users',
+    component: UsuariosComponent,
+    canActivate: [AdminGuard]
+  },
+
+  // Gestión de entrenadores (administrador)
+  {
+    path: 'entrenadores',
+    component: EntrenadoresComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'entrenadores/create',
+    component: EntrenadorCreateComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'entrenadores/edit/:id',
+    component: EntrenadorEditComponent,
+    canActivate: [AdminGuard]
+  },
+
+  // Gestión de clases (administrador)
+  {
+    path: 'clases/create',
+    component: ClasesCreateComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'clases/edit/:id',
+    component: ClasesEditComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'clases/list',
+    component: ClasesListComponent,
+    canActivate: [AdminGuard]
+  },
+
+  // Gestión de reservas (administrador)
+  {
+    path: 'reservas',
+    component: ReservasComponent,
+    canActivate: [AdminGuard]
+  },
+
+  // Redirección por defecto
   { path: '**', redirectTo: '' },  //con esto redirigo a la página de inicio si no encuentor la ruta que meto
 
 ];

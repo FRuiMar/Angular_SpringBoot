@@ -8,7 +8,7 @@
                 <th scope="col">ID</th>
                 <th scope="col">Usuario</th>
                 <th scope="col">Clase</th>
-                <th scope="col">Hora</th>
+                <th scope="col">Fecha Reserva</th>
                 <th scope="col">Entrenador</th>
                 <th scope="col">Acciones</th>
             </tr>
@@ -19,7 +19,7 @@
                 <td>{{ reserva.id }}</td>
                 <td>{{ reserva.nombreUsuario }}</td>
                 <td>{{ reserva.nombreClase }}</td>
-                <td>{{ reserva.hora }}</td>
+                <td>{{ formatearFechaConAjuste(reserva.hora) }}</td>
                 <td>{{ reserva.nombreEntrenador }}</td>
                 <td>
                     <button class="btn btn-danger btn-sm" (click)="borrarReserva(reserva.id)">

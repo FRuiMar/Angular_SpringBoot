@@ -27,7 +27,7 @@ export class UsuariosComponent implements OnInit {
   }
 
   abrirFormulario(): void {
-    this.router.navigate(['/usuarios/register']);
+    this.router.navigate(['/usuarios/create']);
   }
 
   abrirModalEditar(usuario: any): void {
