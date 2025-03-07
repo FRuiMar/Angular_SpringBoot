@@ -4,13 +4,14 @@ import java.io.Serializable;
 import jakarta.persistence.*;
 import java.util.List;
 
+
 /**
  * The persistent class for the usuarios database table.
  * 
  */
 @Entity
-@Table(name = "usuarios")
-@NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u")
+@Table(name="usuarios")
+@NamedQuery(name="Usuario.findAll", query="SELECT u FROM Usuario u")
 public class Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -23,34 +24,33 @@ public class Usuario implements Serializable {
 	private String contrasena;
 	private String imagen;
 
-	// Añadir la anotación @Enumerated para que el enum se almacene como cadena
-	// (String)
+	// Añadir la anotación @Enumerated para que el enum se almacene como cadena (String)
 	@Enumerated(EnumType.STRING)
 	private Rol rol;
 
-	// bi-directional many-to-one association to Reserva
-	@OneToMany(mappedBy = "usuario")
+	//bi-directional many-to-one association to Reserva
+	@OneToMany(mappedBy="usuario")
 	private List<Reserva> reservas;
 
-	// bi-directional many-to-one association to Membresia
+	//bi-directional many-to-one association to Membresia
 	@ManyToOne
-	@JoinColumn(name = "membresia_id")
+	@JoinColumn(name="membresia_id")
 	private Membresia membresia;
 
 	public Usuario() {
 	}
-
-	public Usuario(int id, String dni, String nombre, String apellido, String email, String contrasena,
+	
+	public Usuario(int id, String dni, String nombre, String apellido, String email, String contrasena, 
 			Rol rol, String imagen, Membresia membresia) {
-		this.id = id;
-		this.dni = dni;
-		this.nombre = nombre;
-		this.apellido = apellido;
-		this.email = email;
-		this.contrasena = contrasena;
-		this.rol = rol;
-		this.imagen = imagen;
-		this.membresia = membresia;
+	    this.id = id;
+	    this.dni = dni;
+	    this.nombre = nombre;
+	    this.apellido = apellido;
+	    this.email = email;
+	    this.contrasena = contrasena;
+	    this.rol = rol;
+	    this.imagen = imagen;
+	    this.membresia = membresia;
 	}
 
 	public int getId() {
@@ -146,5 +146,9 @@ public class Usuario implements Serializable {
 	public void setMembresia(Membresia membresia) {
 		this.membresia = membresia;
 	}
+	
+	
+
+	
 
 }

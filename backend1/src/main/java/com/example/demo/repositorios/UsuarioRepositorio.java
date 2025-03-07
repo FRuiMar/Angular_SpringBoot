@@ -20,6 +20,7 @@ public interface UsuarioRepositorio extends JpaRepository<Usuario, Serializable>
 	
 	public abstract Usuario findByEmail(String email);
 	
+	
 	@Transactional  
 	public abstract void deleteById(int id);
 	

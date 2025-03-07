@@ -136,7 +136,8 @@ public class EntrenadorControlador {
 
         if (e != null) {
             entrenadorRep.delete(e);
-            dto_entrenador.put("Entrenador elmininado Correctamente", "OK");
+            dto_entrenador.put("result", "ok");
+            dto_entrenador.put("message", "Entrenador eliminado correctamente");
         }
         else dto_entrenador.put("borrado", "fail");
 
