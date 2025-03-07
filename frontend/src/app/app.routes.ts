@@ -17,6 +17,10 @@ import { EntrenadorEditComponent } from './components/admin/entrenador-edit/entr
 import { UsuarioEditComponent } from './components/admin/usuario-edit/usuario-edit.component';
 import { ReservasUsuarioComponent } from './components/auth/reservas-usuario/reservas-usuario.component';
 import { UsuarioCreateComponent } from './components/admin/usuario-create/usuario-create.component';
+import { MembresiaListComponent } from './components/admin/membresia-list/membresia-list.component';
+import { MembresiaCreateComponent } from './components/admin/membresia-create/membresia-create.component';
+import { MembresiaEditComponent } from './components/admin/membresia-edit/membresia-edit.component';
+
 
 
 export const routes: Routes = [
@@ -36,16 +40,13 @@ export const routes: Routes = [
   },
 
 
+
+
   // ACCESO SOLO ADMINISTRADOR
   //Gestión de usuarios (administrador)
   {
     path: 'usuarios',
     component: UsuariosComponent,
-    canActivate: [AdminGuard]
-  },
-  {
-    path: 'usuarios/register',
-    component: RegisterComponent,
     canActivate: [AdminGuard]
   },
   {
@@ -64,6 +65,7 @@ export const routes: Routes = [
     canActivate: [AdminGuard]
   },
 
+
   // Gestión de entrenadores (administrador)
   {
     path: 'entrenadores',
@@ -80,6 +82,7 @@ export const routes: Routes = [
     component: EntrenadorEditComponent,
     canActivate: [AdminGuard]
   },
+
 
   // Gestión de clases (administrador)
   {
@@ -98,6 +101,7 @@ export const routes: Routes = [
     canActivate: [AdminGuard]
   },
 
+
   // Gestión de reservas (administrador)
   {
     path: 'reservas',
@@ -105,7 +109,30 @@ export const routes: Routes = [
     canActivate: [AdminGuard]
   },
 
-  // Redirección por defecto
+
+  // Gestión de membresías (administrador)
+  {
+    path: 'membresias',
+    component: MembresiaListComponent,
+    canActivate: [AdminGuard]  // Usando el mismo guard que para otras rutas de admin
+  },
+  {
+    path: 'membresias/create',
+    component: MembresiaCreateComponent,
+    canActivate: [AdminGuard]
+  },
+  {
+    path: 'membresias/edit/:id',
+    component: MembresiaEditComponent,
+    canActivate: [AdminGuard]
+  },
+
+
+
+
+
+
+  // REDIRECCIÓN POR DEFECTO
   { path: '**', redirectTo: '' },  //con esto redirigo a la página de inicio si no encuentor la ruta que meto
 
 ];

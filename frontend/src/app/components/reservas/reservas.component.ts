@@ -1,22 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-reservas',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule
   ],
   templateUrl: './reservas.component.html',
   styleUrls: ['./reservas.component.css'],
   providers: [DatePipe]
 })
 export class ReservasComponent implements OnInit {
+  // Datos originales
   reservas: any[] = [];
   usuarios: any[] = [];
   clases: any[] = [];
   reservasCombinadas: any[] = [];
+
+  // Nuevas propiedades para paginación y filtrado
+  reservasFiltradas: any[] = [];
+  reservasPaginadas: any[] = [];
+  paginaActual: number = 1;
+  itemsPorPagina: number = 10;
+  totalPaginas: number = 1;
+  filtroTexto: string = '';
+  Math = Math;
 
   constructor(private apiService: ApiService, private datePipe: DatePipe) { }
 
@@ -82,6 +94,9 @@ export class ReservasComponent implements OnInit {
       });
 
       console.log('Reservas combinadas:', this.reservasCombinadas);
+
+      // Una vez combinados los datos, aplicar filtrado y paginación
+      this.filtrarReservas();
     }
   }
 
@@ -109,7 +124,6 @@ export class ReservasComponent implements OnInit {
     }
   }
 
-
   borrarReserva(id: number): void {
     if (confirm('¿Estás seguro de que deseas borrar esta reserva?')) {
       this.apiService.deleteReserva(id).subscribe({
@@ -117,9 +131,77 @@ export class ReservasComponent implements OnInit {
           console.log('Reserva eliminada:', response);
           alert('Reserva eliminada con éxito');
           this.reservasCombinadas = this.reservasCombinadas.filter(reserva => reserva.id !== id);
+          this.filtrarReservas(); // Actualizar la vista después de borrar
         },
         error: (error) => console.error('Error al borrar la reserva:', error)
       });
     }
+  }
+
+  // Nuevos métodos para paginación y filtrado
+  filtrarReservas(): void {
+    const texto = this.filtroTexto?.toLowerCase().trim() || '';
+
+    if (!texto) {
+      this.reservasFiltradas = [...this.reservasCombinadas];
+    } else {
+      this.reservasFiltradas = this.reservasCombinadas.filter(reserva => {
+        const fechaFormateada = this.formatearFechaConAjuste(reserva.hora);
+        return (
+          (reserva.nombreUsuario?.toLowerCase().includes(texto) ?? false) ||
+          (reserva.nombreClase?.toLowerCase().includes(texto) ?? false) ||
+          (reserva.nombreEntrenador?.toLowerCase().includes(texto) ?? false) ||
+          (fechaFormateada?.toLowerCase().includes(texto) ?? false)
+        );
+      });
+    }
+
+    // Actualizar información de paginación
+    this.totalPaginas = Math.max(1, Math.ceil(this.reservasFiltradas.length / this.itemsPorPagina));
+
+    if (this.paginaActual > this.totalPaginas) {
+      this.paginaActual = 1;
+    }
+
+    this.actualizarReservasPaginadas();
+  }
+
+  cambiarPagina(pagina: number): void {
+    if (pagina >= 1 && pagina <= this.totalPaginas) {
+      this.paginaActual = pagina;
+      this.actualizarReservasPaginadas();
+    }
+  }
+
+  cambiarItemsPorPagina(items: number): void {
+    this.itemsPorPagina = items;
+    this.paginaActual = 1; // Reset a primera página
+    this.filtrarReservas(); // Recalcula el número de páginas y actualiza los datos paginados
+  }
+
+  getPaginas(): number[] {
+    const paginas: number[] = [];
+
+    // Mostrar un máximo de 5 páginas
+    let inicio = Math.max(1, this.paginaActual - 2);
+    let fin = Math.min(this.totalPaginas, inicio + 4);
+
+    // Ajustar si estamos cerca del final
+    if (fin - inicio < 4) {
+      inicio = Math.max(1, fin - 4);
+    }
+
+    for (let i = inicio; i <= fin; i++) {
+      paginas.push(i);
+    }
+
+    return paginas;
+  }
+
+  private actualizarReservasPaginadas(): void {
+    const inicio = (this.paginaActual - 1) * this.itemsPorPagina;
+    const fin = inicio + this.itemsPorPagina;
+
+    this.reservasPaginadas = this.reservasFiltradas.slice(inicio, fin);
   }
 }

@@ -17,6 +17,8 @@ export class UsuarioCreateComponent implements OnInit {
   mensaje: string = '';
   membresias: any[] = []; // Lista de membresías
   roles: string[] = ['NORMAL', 'ADMIN']; // Lista de roles disponibles
+  selectedImage: File | null = null; // Imagen seleccionada
+  imagePreview: string | null = null; // Vista previa de la imagen
 
   constructor(private fb: FormBuilder, private apiService: ApiService, private router: Router) {
     // Inicializar el formulario
@@ -63,6 +65,29 @@ export class UsuarioCreateComponent implements OnInit {
     return null;
   }
 
+  // Método para manejar la selección de imagen
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      this.selectedImage = file;
+
+      // Crear vista previa
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    } else if (file) {
+      this.mensaje = 'Por favor, seleccione un archivo de imagen válido.';
+    }
+  }
+
+  // Método para eliminar la imagen seleccionada
+  removeSelectedImage(): void {
+    this.selectedImage = null;
+    this.imagePreview = null;
+  }
+
   onSubmit() {
     console.log('Formulario enviado con estado:', this.registroForm.status);
     console.log('Valores del formulario:', this.registroForm.value);
@@ -85,13 +110,15 @@ export class UsuarioCreateComponent implements OnInit {
       email: this.registroForm.value.email,
       pass: this.registroForm.value.password,
       rol: this.registroForm.value.rol,
-      imagen: '', // Imagen por defecto
+      imagen: '', // Este campo se maneja a través del archivo
       membresia: this.registroForm.value.membresia,
     };
 
     console.log("Enviando datos del nuevo usuario:", usuarioData);
+    console.log("Imagen seleccionada:", this.selectedImage ? this.selectedImage.name : "Ninguna");
 
-    this.apiService.createUsuario(usuarioData).subscribe({
+    // Usar el método de crear usuario con imagen
+    this.apiService.createUsuarioConImagen(usuarioData, this.selectedImage).subscribe({
       next: (response) => {
         console.log('Usuario creado con éxito:', response);
         this.mensaje = 'Usuario creado exitosamente.';
@@ -100,8 +127,14 @@ export class UsuarioCreateComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al crear el usuario:', error);
-        this.mensaje = error.error?.error || 'Error al crear el usuario.';
+        this.mensaje = error.error?.message || 'Error al crear el usuario.';
       },
     });
+  }
+
+
+  // Asegúrate de añadir este método si no existe
+  cancelar(): void {
+    this.router.navigate(['/usuarios']);  // Ajusta la ruta según tu estructura
   }
 }

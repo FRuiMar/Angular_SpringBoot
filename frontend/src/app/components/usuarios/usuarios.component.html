@@ -2,56 +2,143 @@
     <!-- Botón para Crear Usuario -->
     <div class="mb-4">
         <button class="btn btn-success" (click)="abrirFormulario()">
-            <i class="fas fa-plus"></i> Crear Usuario
+            <i class="bi bi-plus-lg"></i> Crear Usuario
         </button>
     </div>
 
     <!-- Lista de Usuarios -->
     <h2 class="mb-4 lista-usuarios-titulo">Lista de Usuarios</h2>
-    <table class="table table-striped table-hover">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">DNI</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Apellido</th>
-                <th scope="col">Email</th>
-                <th scope="col">Rol</th>
-                <th scope="col">Imagen</th>
-                <th scope="col">Membresía</th>
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (usuario of usuarios; track usuario.id) {
-            <tr>
-                <td>{{ usuario.id }}</td>
-                <td>{{ usuario.dni }}</td>
-                <td>{{ usuario.nombre }}</td>
-                <td>{{ usuario.apellido }}</td>
-                <td>{{ usuario.email }}</td>
-                <td>{{ usuario.rol }}</td>
-                <td>
-                    @if (usuario.imagen) {
-                    <img [src]="usuario.imagen" alt="Imagen de perfil"
-                        style="width: 50px; height: 50px; border-radius: 50%;">
-                    } @else {
-                    <span>Sin imagen</span>
-                    }
-                </td>
-                <td>{{ usuario.membresia }}</td>
-                <td>
-                    <button class="btn btn-warning btn-sm me-2" (click)="abrirModalEditar(usuario)">
-                        <i class="bi bi-pencil-square"></i> Editar
-                    </button>
-                    <button class="btn btn-danger btn-sm" (click)="borrarUsuario(usuario.id)">
-                        <i class="bi bi-trash3"></i> Borrar
-                    </button>
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
+
+    <!-- Filtro de búsqueda -->
+    <div class="mb-3">
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input type="text" class="form-control" placeholder="Buscar usuarios..." [(ngModel)]="filtroTexto"
+                (keyup)="filtrarUsuarios()">
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">DNI</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Rol</th>
+                    <th scope="col">Imagen</th>
+                    <th scope="col">Membresía</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (usuario of usuariosPaginados; track usuario.id) {
+                <tr>
+                    <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.dni }}</td>
+                    <td>{{ usuario.nombre }}</td>
+                    <td>{{ usuario.apellido }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>
+                        <span [ngClass]="{
+                            'badge bg-danger': usuario.rol === 'ADMIN',
+                            'badge bg-success': usuario.rol === 'NORMAL'
+                        }">{{ usuario.rol }}</span>
+                    </td>
+                    <td class="text-center" style="width: 80px;">
+                        @if (usuario.imagen) {
+                        <img [src]="'http://localhost:8080' + usuario.imagen" alt="Imagen de perfil" class="img-avatar">
+                        } @else {
+                        <div class="no-image-placeholder">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+                        }
+                    </td>
+                    <td>{{ usuario.membresia }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-warning btn-sm me-1" (click)="abrirModalEditar(usuario)"
+                                title="Editar">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" (click)="borrarUsuario(usuario.id)" title="Eliminar">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Barra de paginación con todas las opciones en una línea -->
+    <div class="pagination-bar mt-3 d-flex justify-content-between align-items-center"
+        *ngIf="usuariosFiltrados.length > 5">
+        <!-- Selector de elementos por página (lo pongo a la izquierda) -->
+        <div class="pagination-size">
+            <div class="btn-group">
+                <button class="btn btn-sm" [class.btn-primary]="itemsPorPagina === 5"
+                    [class.btn-outline-primary]="itemsPorPagina !== 5" (click)="cambiarItemsPorPagina(5)">5</button>
+                <button class="btn btn-sm" [class.btn-primary]="itemsPorPagina === 10"
+                    [class.btn-outline-primary]="itemsPorPagina !== 10" (click)="cambiarItemsPorPagina(10)">10</button>
+                <button class="btn btn-sm" [class.btn-primary]="itemsPorPagina === 25"
+                    [class.btn-outline-primary]="itemsPorPagina !== 25" (click)="cambiarItemsPorPagina(25)">25</button>
+            </div>
+            <span class="ms-2">por página</span>
+        </div>
+
+        <!-- Paginación (Lo dejo en elcentro) -->
+        <nav *ngIf="usuariosFiltrados.length > itemsPorPagina">
+            <ul class="pagination mb-0">
+                <!-- Primera página -->
+                <li class="page-item" [class.disabled]="paginaActual === 1">
+                    <a class="page-link" href="javascript:void(0)" (click)="cambiarPagina(1)">
+                        <i class="bi bi-chevron-double-left"></i>
+                    </a>
+                </li>
+
+                <!-- Página anterior -->
+                <li class="page-item" [class.disabled]="paginaActual === 1">
+                    <a class="page-link" href="javascript:void(0)" (click)="cambiarPagina(paginaActual - 1)">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+
+                <!-- Páginas numeradas -->
+                <ng-container *ngFor="let pagina of getPaginas()">
+                    <li class="page-item" [class.active]="pagina === paginaActual">
+                        <a class="page-link" href="javascript:void(0)" (click)="cambiarPagina(pagina)">{{ pagina }}</a>
+                    </li>
+                </ng-container>
+
+                <!-- Página siguiente -->
+                <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
+                    <a class="page-link" href="javascript:void(0)" (click)="cambiarPagina(paginaActual + 1)">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+
+                <!-- Última página -->
+                <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
+                    <a class="page-link" href="javascript:void(0)" (click)="cambiarPagina(totalPaginas)">
+                        <i class="bi bi-chevron-double-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Contador de resultados - Lo pongo a la derecha mejor -->
+        <div class="pagination-info" *ngIf="usuariosFiltrados.length > 0">
+            <span class="contador-resultados px-3 py-2">
+                Mostrando {{ (paginaActual - 1) * itemsPorPagina + 1 }} -
+                {{ Math.min(paginaActual * itemsPorPagina, usuariosFiltrados.length) }}
+                de {{ usuariosFiltrados.length }} usuarios
+            </span>
+        </div>
+    </div>
 
     @if (usuarios.length === 0) {
     <div class="alert alert-info">

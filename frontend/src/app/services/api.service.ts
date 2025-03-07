@@ -200,6 +200,45 @@ export class ApiService {
     );
   }
 
+  // Añade este método en tu ApiService
+
+  createUsuarioConImagen(datos: any, imagen: File | null): Observable<any> {
+    const formData = new FormData();
+
+    // Añadir los datos del usuario como parte separada
+    formData.append('datos', new Blob([JSON.stringify(datos)], {
+      type: 'application/json'
+    }));
+
+    // Añadir la imagen si existe
+    if (imagen) {
+      formData.append('imagen', imagen, imagen.name);
+    }
+
+    return this.http.post<any>(`${this.baseUrl}/usuario/addUsuario`, formData);
+  }
+
+
+  // Nuevo método que recibe un objeto de usuario y una imagen
+  registrarUsuarioConImagen(datos: any, imagen: File | null): Observable<any> {
+    const formData = new FormData();
+
+    // Añadir los datos del usuario como parte separada
+    formData.append('datos', new Blob([JSON.stringify(datos)], {
+      type: 'application/json'
+    }));
+
+    // Añadir la imagen si existe
+    if (imagen) {
+      formData.append('imagen', imagen, imagen.name);
+    }
+
+    // Usar el método existente que espera un FormData
+    return this.registrarUsuario(formData);
+  }
+
+
+
   // Métodos para Usuarios
   getUsuarios(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/usuario/obtener`);
@@ -207,6 +246,10 @@ export class ApiService {
 
   getUsuarioById(id: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/usuario/obtenerPorId`, { id });
+  }
+
+  registrarUsuario(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/usuario/addUsuario`, formData);
   }
 
   createUsuario(usuario: any): Observable<any> {
@@ -217,9 +260,17 @@ export class ApiService {
     return this.http.put(`${this.baseUrl}/usuario/editUsuarioPorId`, usuario);
   }
 
-  deleteUsuario(id: any): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/usuario/deleteUsuarioPorId`, { body: { id } });
+  // deleteUsuario(id: any): Observable<any> {
+  //   return this.http.delete(`${this.baseUrl}/usuario/deleteUsuarioPorId`, { body: { id } });
+  // }
+  deleteUsuario(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/usuario/deleteUsuarioPorId`, {
+      body: { id }
+    });
   }
+
+
+
 
   // Métodos para Entrenadores
   getEntrenadores(): Observable<any[]> {
@@ -301,11 +352,11 @@ export class ApiService {
     return this.http.get<any[]>(`${this.baseUrl}/membresia/obtener`);
   }
 
-  getMembresiaById(id: string): Observable<any> {
+  getMembresiaById(id: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/membresia/obtener1`, { id });
   }
 
-  deleteMembresia(id: string): Observable<any> {
+  deleteMembresia(id: any): Observable<any> {
     return this.http.delete(`${this.baseUrl}/membresia/borrar1`, { body: { id } });
   }
 

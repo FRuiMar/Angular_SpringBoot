@@ -1,54 +1,70 @@
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="shadow-lg card">
-                <div class="card-body">
-                    <h2 class="mb-4 text-center">Crear Entrenador</h2>
-
-                    <form (ngSubmit)="onSubmit()">
-                        <!-- DNI -->
-                        <div class="mb-3">
-                            <label for="dni" class="form-label">DNI</label>
-                            <input type="text" class="form-control" id="dni" [(ngModel)]="entrenador.dni" name="dni"
-                                required>
-                        </div>
-
-                        <!-- Nombre -->
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" [(ngModel)]="entrenador.nombre"
-                                name="nombre" required>
-                        </div>
-
-                        <!-- Apellido -->
-                        <div class="mb-3">
-                            <label for="apellido" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="apellido" [(ngModel)]="entrenador.apellido"
-                                name="apellido" required>
-                        </div>
-
-                        <!-- Especialidad -->
-                        <div class="mb-3">
-                            <label for="especialidad" class="form-label">Especialidad</label>
-                            <input type="text" class="form-control" id="especialidad"
-                                [(ngModel)]="entrenador.especialidad" name="especialidad" required>
-                        </div>
-
-                        <!-- Imagen -->
-                        <div class="mb-3">
-                            <label for="imagen" class="form-label">Imagen (URL)</label>
-                            <input type="text" class="form-control" id="imagen" [(ngModel)]="entrenador.imagen"
-                                name="imagen">
-                        </div>
-
-                        <!-- Botón para Guardar -->
-                        <div class="d-flex justify-content-between">
-                            <button type="submit" class="btn btn-success">Crear Entrenador</button>
-                            <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
-                        </div>
-                    </form>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h3><i class="bi bi-plus-circle me-2"></i>Crear Nuevo Entrenador</h3>
+        </div>
+        <div class="card-body">
+            <form (ngSubmit)="onSubmit()">
+                <!-- DNI -->
+                <div class="mb-3">
+                    <label for="dni" class="form-label">DNI *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                        <input type="text" class="form-control" id="dni" [(ngModel)]="entrenador.dni" name="dni"
+                            required placeholder="Ej: 12345678X">
+                    </div>
                 </div>
-            </div>
+
+                <!-- Nombre -->
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <input type="text" class="form-control" id="nombre" [(ngModel)]="entrenador.nombre"
+                            name="nombre" required placeholder="Nombre del entrenador">
+                    </div>
+                </div>
+
+                <!-- Apellido -->
+                <div class="mb-3">
+                    <label for="apellido" class="form-label">Apellido *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                        <input type="text" class="form-control" id="apellido" [(ngModel)]="entrenador.apellido"
+                            name="apellido" required placeholder="Apellido del entrenador">
+                    </div>
+                </div>
+
+                <!-- Especialidad -->
+                <div class="mb-3">
+                    <label for="especialidad" class="form-label">Especialidad *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-award"></i></span>
+                        <input type="text" class="form-control" id="especialidad" [(ngModel)]="entrenador.especialidad"
+                            name="especialidad" required placeholder="Ej: Yoga, Pilates, Musculación...">
+                    </div>
+                </div>
+
+                <!-- Imagen -->
+                <div class="mb-3">
+                    <label for="imagen" class="form-label">URL de la Imagen</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-image"></i></span>
+                        <input type="text" class="form-control" id="imagen" [(ngModel)]="entrenador.imagen"
+                            name="imagen" placeholder="URL de la foto del entrenador">
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-secondary" (click)="cancelar()">
+                        <i class="bi bi-arrow-left me-1"></i> Volver
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-lg me-1"></i> Guardar Entrenador
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

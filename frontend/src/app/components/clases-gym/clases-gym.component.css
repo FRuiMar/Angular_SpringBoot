@@ -1,80 +1,168 @@
-.lista-usuarios-titulo {
+/* Título principal */
+.lista-actividades-titulo {
   text-align: center;
-  font-size: 3.5rem;
+  font-size: 3rem;
   color: white;
   text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
-    1px 1px 0 black; /* Contorno más grueso */
+    1px 1px 0 black;
+  margin-bottom: 2rem;
+  font-weight: 700;
 }
 
-/* Estilo para la flip card con borde rojo apagado */
+/* Contenedor de tarjetas */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.col-md-4 {
+  width: 100%;
+  max-width: 340px;
+  padding: 0;
+}
+
+/* Flip-card básica */
 .flip-card {
   background-color: transparent;
   width: 100%;
-  height: 300px;
+  height: 280px; /* Altura más reducida */
   perspective: 1000px;
+  margin-bottom: 30px;
 }
 
-/* Contenedor interno */
 .flip-card-inner {
   position: relative;
   width: 100%;
   height: 100%;
-  transition: transform 0.6s;
+  transition: transform 0.8s;
   transform-style: preserve-3d;
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
 }
 
-/* Añadir el efecto flipped */
 .flip-card.flipped .flip-card-inner {
   transform: rotateY(180deg);
 }
 
-/* Estilo común para ambas caras */
+/* Estilos comunes para ambas caras */
 .flip-card-front,
 .flip-card-back {
   position: absolute;
   width: 100%;
   height: 100%;
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  border: 8px solid #964d4d; /* Borde rojo apagado */
-  border-radius: 25px;
+  border: 8px solid #964d4d;
+  border-radius: 15px;
+  overflow: hidden;
 }
 
-/* Estilo de la cara frontal */
+/* Cara frontal */
 .flip-card-front {
-  background-color: #fff;
+  background: linear-gradient(135deg, #949292, #646262),
+    url("../../../assets/img/fondos/fondoact3.jpg");
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: overlay;
+}
+
+.flip-card-front .card-body {
+  width: 100%;
+  height: 100%;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  text-align: center;
+  align-items: center;
   padding: 20px;
 }
 
-/* Centrar y aumentar el tamaño del texto del nombre */
-.flip-card-front .card-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-}
-
 .flip-card-front .card-title {
-  font-size: 2.5rem; /* Más grande */
-  font-weight: bold;
-  color: #333; /* Color oscuro */
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   margin: 0;
 }
 
-/* Estilo de la cara trasera */
+/* Cara trasera */
 .flip-card-back {
   background-color: #f8f9fa;
   transform: rotateY(180deg);
-  padding: 15px;
 }
 
-/* Estilo para la imagen */
-.card-img-top {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
+.flip-card-back .card-body {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  height: 100%;
+}
+
+.flip-card-back .card-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #964d4d;
+  margin-bottom: 15px;
+  text-align: center;
+  border-bottom: 2px dashed #e0d0d0;
+  padding-bottom: 10px;
+}
+
+.flip-card-back .card-text {
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.flip-card-back .card-text strong {
+  margin-right: 10px;
+  color: #964d4d;
+  font-weight: 600;
+}
+
+/* Ocultar ID */
+.flip-card-back .card-text:first-of-type {
+  display: none;
+}
+
+/* Botón RESERVAR con z-index explícito */
+.flip-card-back .btn-primary {
+  margin-top: auto;
+  background-color: #964d4d;
+  border-color: #964d4d;
+  padding: 12px 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 10; /* Añadido para asegurar que está por encima */
+  cursor: pointer;
+  pointer-events: auto; /* Asegurar que recibe eventos */
+}
+
+.flip-card-back .btn-primary:hover {
+  background-color: #813d3d;
+  border-color: #813d3d;
+}
+
+/* Mensaje cuando no hay clases */
+.alert-info {
+  background-color: #f8f9fa;
+  border: 2px solid #964d4d;
+  border-radius: 10px;
+  color: #964d4d;
+  padding: 20px;
+  text-align: center;
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+  .lista-usuarios-titulo {
+    font-size: 2.5rem;
+  }
+
+  .col-md-4 {
+    max-width: 100%;
+  }
 }

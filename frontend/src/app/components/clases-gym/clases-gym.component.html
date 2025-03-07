@@ -1,5 +1,5 @@
 <div class="container mt-4">
-    <h2 class="mb-4 lista-usuarios-titulo">Lista de Clases de Gimnasio</h2>
+    <h2 class="mb-4 lista-actividades-titulo">ACTIVIDADES DISPONIBLES</h2>
 
     <!-- Cuadrícula de flip cards -->
     <div class="row">
@@ -22,7 +22,7 @@
                             <!-- Añadir esto para verificar -->
                             <p class="card-text"><strong>Horario:</strong> {{ clase.horario }}</p>
                             <p class="card-text"><strong>Entrenador:</strong> {{ clase.entrenador }}</p>
-                            <p class="card-text"><strong>Capacidad:</strong> {{ clase.capacidad }} personas</p>
+
                             <!-- Botón RESERVAR -->
                             <button class="btn btn-primary" (click)="reservarClase(clase.id); $event.stopPropagation()">
                                 RESERVAR

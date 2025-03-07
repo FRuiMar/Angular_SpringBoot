@@ -1,119 +1,190 @@
 <div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="shadow-lg card">
-                <div class="card-body">
-                    <h3 class="mb-4 text-center">Registro de Usuario</h3>
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0"><i class="bi bi-person-plus me-2"></i>Registro de Usuario</h3>
+        </div>
+        <div class="card-body">
+            <!-- Mensaje de estado -->
+            <div *ngIf="mensaje" class="alert mb-4"
+                [ngClass]="{'alert-success': !mensaje.includes('Error'), 'alert-danger': mensaje.includes('Error')}">
+                <i class="bi"
+                    [ngClass]="{'bi-check-circle-fill': !mensaje.includes('Error'), 'bi-exclamation-triangle-fill': mensaje.includes('Error')}"></i>
+                {{ mensaje }}
+            </div>
 
-                    <!-- Mensaje de estado -->
-                    <p *ngIf="mensaje" class="text-center alert alert-info">
-                        {{ mensaje }}
-                    </p>
+            <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+                <div class="row mb-4">
+                    <!-- Sección de imagen de perfil -->
+                    <div class="col-md-3">
+                        <div class="image-upload-container text-center">
+                            <div class="profile-image-wrapper" [class.has-image]="imagenPreview"
+                                (click)="fileInput.click()">
+                                <div *ngIf="!imagenPreview" class="placeholder-content">
+                                    <i class="bi bi-person-bounding-box"></i>
+                                    <span>Foto de perfil</span>
+                                    <small class="text-muted">(opcional)</small>
+                                </div>
+                                <img *ngIf="imagenPreview" [src]="imagenPreview" alt="Foto de perfil"
+                                    class="profile-image">
+                                <div class="overlay">
+                                    <i class="bi bi-camera"></i>
+                                </div>
+                            </div>
+                            <input type="file" #fileInput hidden accept="image/*" (change)="onFileSelected($event)">
 
-                    <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+                            <button *ngIf="imagenPreview" type="button" class="btn btn-sm btn-outline-danger mt-2"
+                                (click)="removeSelectedImage()">
+                                <i class="bi bi-trash me-1"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Detalles básicos del usuario -->
+                    <div class="col-md-9">
                         <!-- DNI -->
                         <div class="mb-3">
-                            <label for="dni" class="form-label">DNI:</label>
-                            <input type="text" class="form-control" id="dni" formControlName="dni"
-                                placeholder="Introduzca su DNI" />
-                            <small *ngIf="registroForm.get('dni')?.errors?.['required']" class="text-danger">
-                                El DNI es obligatorio.
-                            </small>
-                            <small
-                                *ngIf="registroForm.get('dni')?.errors?.['minlength'] || registroForm.get('dni')?.errors?.['maxlength']"
-                                class="text-danger">
-                                El DNI debe tener 9 caracteres.
-                            </small>
+                            <label for="dni" class="form-label">DNI *</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                                <input type="text" class="form-control" id="dni" formControlName="dni"
+                                    placeholder="Ej: 12345678X"
+                                    [ngClass]="{'is-invalid': registroForm.get('dni')?.touched && registroForm.get('dni')?.invalid}">
+                            </div>
+                            <div *ngIf="registroForm.get('dni')?.touched" class="text-danger small">
+                                <span *ngIf="registroForm.get('dni')?.errors?.['required']">
+                                    El DNI es obligatorio.
+                                </span>
+                                <span
+                                    *ngIf="registroForm.get('dni')?.errors?.['minlength'] || registroForm.get('dni')?.errors?.['maxlength']">
+                                    El DNI debe tener 9 caracteres.
+                                </span>
+                            </div>
                         </div>
 
                         <!-- Nombre y Apellido -->
-                        <div class="mb-3 row">
+                        <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="nombre" class="form-label">Nombre:</label>
-                                <input type="text" class="form-control" id="nombre" formControlName="nombre"
-                                    placeholder="Introduzca su nombre" />
-                                <small *ngIf="registroForm.get('nombre')?.errors?.['required']" class="text-danger">
+                                <label for="nombre" class="form-label">Nombre *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control" id="nombre" formControlName="nombre"
+                                        placeholder="Introduzca su nombre"
+                                        [ngClass]="{'is-invalid': registroForm.get('nombre')?.touched && registroForm.get('nombre')?.invalid}">
+                                </div>
+                                <div *ngIf="registroForm.get('nombre')?.touched && registroForm.get('nombre')?.errors?.['required']"
+                                    class="text-danger small">
                                     El nombre es obligatorio.
-                                </small>
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <label for="apellido" class="form-label">Apellido:</label>
-                                <input type="text" class="form-control" id="apellido" formControlName="apellido"
-                                    placeholder="Introduzca su apellido" />
-                                <small *ngIf="registroForm.get('apellido')?.errors?.['required']" class="text-danger">
+                                <label for="apellido" class="form-label">Apellido *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                                    <input type="text" class="form-control" id="apellido" formControlName="apellido"
+                                        placeholder="Introduzca su apellido"
+                                        [ngClass]="{'is-invalid': registroForm.get('apellido')?.touched && registroForm.get('apellido')?.invalid}">
+                                </div>
+                                <div *ngIf="registroForm.get('apellido')?.touched && registroForm.get('apellido')?.errors?.['required']"
+                                    class="text-danger small">
                                     El apellido es obligatorio.
-                                </small>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- Email -->
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Correo electrónico:</label>
-                            <input type="email" class="form-control" id="email" formControlName="email"
-                                placeholder="usuario@gmail.com" />
-                            <small *ngIf="registroForm.get('email')?.errors?.['required']" class="text-danger">
-                                El email es obligatorio.
-                            </small>
-                            <small *ngIf="registroForm.get('email')?.errors?.['email']" class="text-danger">
-                                Introduce un email válido.
-                            </small>
-                        </div>
-
-                        <!-- Contraseña y Confirmar Contraseña -->
-                        <div class="mb-3 row">
-                            <div class="col-md-6">
-                                <label for="password" class="form-label">Contraseña:</label>
-                                <input type="password" class="form-control" id="password" formControlName="password"
-                                    placeholder="Mínimo 5 caracteres" />
-                                <small *ngIf="registroForm.get('password')?.errors?.['required']" class="text-danger">
-                                    La contraseña es obligatoria.
-                                </small>
-                                <small *ngIf="registroForm.get('password')?.errors?.['minlength']" class="text-danger">
-                                    La contraseña debe tener al menos 5 caracteres.
-                                </small>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="confirmPassword" class="form-label">Confirmar Contraseña:</label>
-                                <input type="password" class="form-control" id="confirmPassword"
-                                    formControlName="confirmPassword" placeholder="Repita la contraseña" />
-                                <small *ngIf="registroForm.get('confirmPassword')?.errors?.['required']"
-                                    class="text-danger">
-                                    Confirma la contraseña.
-                                </small>
-                                <small *ngIf="registroForm.errors?.['passwordsNotMatching']" class="text-danger">
-                                    Las contraseñas no coinciden.
-                                </small>
-                            </div>
-                        </div>
-
-                        <!-- Selección de Membresía -->
-                        <div class="mb-3">
-                            <label for="membresia" class="form-label">Membresía:</label>
-                            <select class="form-control" id="membresia" formControlName="membresia">
-                                <option value="">Seleccione una membresía</option>
-                                <option *ngFor="let membresia of membresias" [value]="membresia.id">
-                                    {{ membresia.tipo }} - {{ membresia.precio }} €
-                                </option>
-                            </select>
-                            <small *ngIf="registroForm.get('membresia')?.errors?.['required']" class="text-danger">
-                                Selecciona una membresía.
-                            </small>
-                        </div>
-
-                        <!-- Botón de registro -->
-                        <div class="gap-2 d-grid">
-                            <button type="submit" class="mt-3 btn btn-primary" [disabled]="registroForm.invalid">
-                                Registrarse
-                            </button>
-                        </div>
-                    </form>
-
-                    <!-- Enlace a inicio de sesión -->
-                    <div class="mt-3 text-center">
-                        <a routerLink="/login">¿Ya tienes cuenta? Inicia sesión</a>
                     </div>
                 </div>
-            </div>
+
+                <hr class="my-4">
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo electrónico *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input type="email" class="form-control" id="email" formControlName="email"
+                            placeholder="usuario@ejemplo.com"
+                            [ngClass]="{'is-invalid': registroForm.get('email')?.touched && registroForm.get('email')?.invalid}">
+                    </div>
+                    <div *ngIf="registroForm.get('email')?.touched" class="text-danger small">
+                        <span *ngIf="registroForm.get('email')?.errors?.['required']">
+                            El email es obligatorio.
+                        </span>
+                        <span *ngIf="registroForm.get('email')?.errors?.['email']">
+                            Introduce un email válido.
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Contraseña y Confirmación -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="password" class="form-label">Contraseña *</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key"></i></span>
+                            <input type="password" class="form-control" id="password" formControlName="password"
+                                placeholder="Mínimo 5 caracteres"
+                                [ngClass]="{'is-invalid': registroForm.get('password')?.touched && registroForm.get('password')?.invalid}">
+                        </div>
+                        <div *ngIf="registroForm.get('password')?.touched" class="text-danger small">
+                            <span *ngIf="registroForm.get('password')?.errors?.['required']">
+                                La contraseña es obligatoria.
+                            </span>
+                            <span *ngIf="registroForm.get('password')?.errors?.['minlength']">
+                                La contraseña debe tener al menos 5 caracteres.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="confirmPassword" class="form-label">Confirmar Contraseña *</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                            <input type="password" class="form-control" id="confirmPassword"
+                                formControlName="confirmPassword" placeholder="Repita la contraseña"
+                                [ngClass]="{'is-invalid': ((registroForm.get('confirmPassword')?.touched && registroForm.get('confirmPassword')?.invalid) || (registroForm.errors?.['passwordsNotMatching'] && registroForm.get('confirmPassword')?.touched))}">
+                        </div>
+                        <div class="text-danger small">
+                            <span
+                                *ngIf="registroForm.get('confirmPassword')?.touched && registroForm.get('confirmPassword')?.errors?.['required']">
+                                Confirma la contraseña.
+                            </span>
+                            <span
+                                *ngIf="registroForm.errors?.['passwordsNotMatching'] && registroForm.get('confirmPassword')?.touched">
+                                Las contraseñas no coinciden.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Membresía -->
+                <div class="mb-3">
+                    <label for="membresia" class="form-label">Membresía *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-tag"></i></span>
+                        <select class="form-select" id="membresia" formControlName="membresia"
+                            [ngClass]="{'is-invalid': registroForm.get('membresia')?.touched && registroForm.get('membresia')?.invalid}">
+                            <option value="" disabled selected>Selecciona una membresía</option>
+                            <option *ngFor="let membresia of membresias" [value]="membresia.id">
+                                {{ membresia.tipo }} - {{ membresia.precio | currency:'EUR' }}
+                            </option>
+                        </select>
+                    </div>
+                    <div *ngIf="registroForm.get('membresia')?.touched && registroForm.get('membresia')?.errors?.['required']"
+                        class="text-danger small">
+                        Selecciona una membresía.
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary" [disabled]="registroForm.invalid">
+                        <i class="bi bi-check-lg me-2"></i> Registrarse
+                    </button>
+                </div>
+
+                <!-- Enlace a inicio de sesión -->
+                <div class="mt-4 text-center">
+                    <p class="mb-0">¿Ya tienes cuenta? <a routerLink="/login" class="link-primary">Inicia sesión</a></p>
+                </div>
+            </form>
         </div>
     </div>
 </div>

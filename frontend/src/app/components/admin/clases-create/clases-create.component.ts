@@ -54,4 +54,10 @@ export class ClasesCreateComponent implements OnInit {
       error: (error) => console.error('Error al crear la actividad:', error)
     });
   }
+
+
+  // Asegúrate de añadir este método si no existe
+  cancelar(): void {
+    this.router.navigate(['/clases/list']);  // Ajusta la ruta según tu estructura
+  }
 }

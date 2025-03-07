@@ -1,62 +1,79 @@
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="shadow-lg card">
-                <div class="card-body">
-                    <h2 class="mb-4 text-center">Editar Actividad</h2>
-
-                    <form (ngSubmit)="onSubmit()">
-                        <!-- ID de la Actividad (oculto) -->
-                        <input type="hidden" [(ngModel)]="clase.id" name="id">
-
-                        <!-- Nombre de la Actividad -->
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre de la Actividad</label>
-                            <input type="text" class="form-control" id="nombre" [(ngModel)]="clase.nombre" name="nombre"
-                                required>
-                        </div>
-
-                        <!-- Horario -->
-                        <div class="mb-3">
-                            <label for="horario" class="form-label">Horario</label>
-                            <input type="datetime-local" class="form-control" id="horario" [(ngModel)]="clase.horario"
-                                name="horario" required>
-                        </div>
-
-                        <!-- Entrenador (desplegable) -->
-                        <!-- <div class="mb-3">
-                            <label for="entrenadores" class="form-label">Entrenador</label>
-                            <select class="form-select" id="entrenadores" [(ngModel)]="clase.entrenadores"
-                                name="entrenadores" required>
-                                <option *ngFor="let entrenador of entrenadores" [value]="entrenador.id">{{
-                                    entrenador.nombre }}</option>
-                            </select>
-                        </div> -->
-                        <!-- Entrenador (desplegable) -->
-                        <div class="mb-3">
-                            <label for="entrenadores" class="form-label">Entrenador</label>
-                            <select class="form-select" id="entrenadores" [(ngModel)]="clase.entrenadores"
-                                name="entrenadores" required>
-                                <option *ngFor="let entrenador of entrenadores" [value]="entrenador.id">{{
-                                    entrenador.nombre }}</option>
-                            </select>
-                        </div>
-
-                        <!-- Capacidad Máxima -->
-                        <div class="mb-3">
-                            <label for="capacidadMaxima" class="form-label">Capacidad Máxima</label>
-                            <input type="number" class="form-control" id="capacidadMaxima"
-                                [(ngModel)]="clase.capacidad_maxima" name="capacidadMaxima" required>
-                        </div>
-
-                        <!-- Botón para Guardar Cambios -->
-                        <div class="d-flex justify-content-between">
-                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                            <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
-                        </div>
-                    </form>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-warning">
+            <h3><i class="bi bi-pencil-square me-2"></i>Editar Actividad</h3>
+        </div>
+        <div class="card-body">
+            <div *ngIf="!clase" class="text-center my-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
                 </div>
+                <p class="mt-2">Cargando datos de la actividad...</p>
             </div>
+
+            <form *ngIf="clase" (ngSubmit)="onSubmit()">
+                <!-- ID de la Actividad (mostrado pero solo lectura) -->
+                <div class="mb-3">
+                    <label for="id" class="form-label">ID</label>
+                    <input type="text" class="form-control" id="id" [(ngModel)]="clase.id" name="id" readonly>
+                </div>
+
+                <!-- Nombre de la Actividad -->
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre de la Actividad *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-activity"></i></span>
+                        <input type="text" class="form-control" id="nombre" [(ngModel)]="clase.nombre" name="nombre"
+                            required placeholder="Ej: Yoga, Pilates, Spinning...">
+                    </div>
+                </div>
+
+                <!-- Horario -->
+                <div class="mb-3">
+                    <label for="horario" class="form-label">Horario *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-clock"></i></span>
+                        <input type="datetime-local" class="form-control" id="horario" [(ngModel)]="clase.horario"
+                            name="horario" required>
+                    </div>
+                </div>
+
+                <!-- Entrenador (desplegable) -->
+                <div class="mb-3">
+                    <label for="entrenadores" class="form-label">Entrenador *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                        <select class="form-select" id="entrenadores" [(ngModel)]="clase.entrenadores"
+                            name="entrenadores" required>
+                            <option value="" disabled selected>Selecciona un entrenador</option>
+                            <option *ngFor="let entrenador of entrenadores" [value]="entrenador.id">
+                                {{entrenador.nombre}} {{entrenador.apellido}} - {{entrenador.especialidad}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Capacidad Máxima -->
+                <div class="mb-3">
+                    <label for="capacidadMaxima" class="form-label">Capacidad Máxima *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-people-fill"></i></span>
+                        <input type="number" min="1" class="form-control" id="capacidadMaxima"
+                            [(ngModel)]="clase.capacidad_maxima" name="capacidadMaxima" required
+                            placeholder="Número máximo de participantes">
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-secondary" (click)="cancelar()">
+                        <i class="bi bi-arrow-left me-1"></i> Volver
+                    </button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-check-lg me-1"></i> Actualizar Actividad
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

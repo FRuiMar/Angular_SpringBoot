@@ -1,57 +1,80 @@
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="shadow-lg card">
-                <div class="card-body">
-                    <h2 class="mb-4 text-center">Editar Entrenador</h2>
-
-                    <form (ngSubmit)="onSubmit()">
-                        <!-- ID del Entrenador (oculto) -->
-                        <input type="hidden" [(ngModel)]="entrenador.id" name="id">
-
-                        <!-- DNI -->
-                        <div class="mb-3">
-                            <label for="dni" class="form-label">DNI</label>
-                            <input type="text" class="form-control" id="dni" [(ngModel)]="entrenador.dni" name="dni"
-                                required>
-                        </div>
-
-                        <!-- Nombre -->
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" [(ngModel)]="entrenador.nombre"
-                                name="nombre" required>
-                        </div>
-
-                        <!-- Apellido -->
-                        <div class="mb-3">
-                            <label for="apellido" class="form-label">Apellido</label>
-                            <input type="text" class="form-control" id="apellido" [(ngModel)]="entrenador.apellido"
-                                name="apellido" required>
-                        </div>
-
-                        <!-- Especialidad -->
-                        <div class="mb-3">
-                            <label for="especialidad" class="form-label">Especialidad</label>
-                            <input type="text" class="form-control" id="especialidad"
-                                [(ngModel)]="entrenador.especialidad" name="especialidad" required>
-                        </div>
-
-                        <!-- Imagen -->
-                        <div class="mb-3">
-                            <label for="imagen" class="form-label">URL de la Imagen</label>
-                            <input type="text" class="form-control" id="imagen" [(ngModel)]="entrenador.imagen"
-                                name="imagen">
-                        </div>
-
-                        <!-- Botón para Guardar Cambios -->
-                        <div class="d-flex justify-content-between">
-                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                            <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
-                        </div>
-                    </form>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-warning">
+            <h3><i class="bi bi-pencil-square me-2"></i>Editar Entrenador</h3>
+        </div>
+        <div class="card-body">
+            <div *ngIf="!entrenador" class="text-center my-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
                 </div>
+                <p class="mt-2">Cargando datos del entrenador...</p>
             </div>
+
+            <form *ngIf="entrenador" (ngSubmit)="onSubmit()">
+                <!-- ID del Entrenador (oculto) -->
+                <input type="hidden" [(ngModel)]="entrenador.id" name="id">
+
+                <!-- DNI -->
+                <div class="mb-3">
+                    <label for="dni" class="form-label">DNI *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                        <input type="text" class="form-control" id="dni" [(ngModel)]="entrenador.dni" name="dni"
+                            required placeholder="Ej: 12345678X">
+                    </div>
+                </div>
+
+                <!-- Nombre -->
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <input type="text" class="form-control" id="nombre" [(ngModel)]="entrenador.nombre"
+                            name="nombre" required placeholder="Nombre del entrenador">
+                    </div>
+                </div>
+
+                <!-- Apellido -->
+                <div class="mb-3">
+                    <label for="apellido" class="form-label">Apellido *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                        <input type="text" class="form-control" id="apellido" [(ngModel)]="entrenador.apellido"
+                            name="apellido" required placeholder="Apellido del entrenador">
+                    </div>
+                </div>
+
+                <!-- Especialidad -->
+                <div class="mb-3">
+                    <label for="especialidad" class="form-label">Especialidad *</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-award"></i></span>
+                        <input type="text" class="form-control" id="especialidad" [(ngModel)]="entrenador.especialidad"
+                            name="especialidad" required placeholder="Ej: Yoga, Pilates, Musculación...">
+                    </div>
+                </div>
+
+                <!-- Imagen -->
+                <div class="mb-3">
+                    <label for="imagen" class="form-label">URL de la Imagen</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-image"></i></span>
+                        <input type="text" class="form-control" id="imagen" [(ngModel)]="entrenador.imagen"
+                            name="imagen" placeholder="URL de la foto del entrenador">
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-secondary" (click)="cancelar()">
+                        <i class="bi bi-arrow-left me-1"></i> Volver
+                    </button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-check-lg me-1"></i> Actualizar Entrenador
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

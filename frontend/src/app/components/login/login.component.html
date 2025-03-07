@@ -1,44 +1,47 @@
 <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <div class="shadow-lg card">
-                <div class="card-body">
-                    <h3 class="text-center">Iniciar sesión</h3>
-
-                    <form [formGroup]="loginForm" (ngSubmit)="login()">
-                        <!-- Usuario email -->
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="text" id="email" class="form-control" formControlName="email"
-                                placeholder="Ingrese su email" />
-                        </div>
-
-                        <!-- Contraseña -->
-                        <div class="mb-3">
-                            <label for="pass" class="form-label">Contraseña</label>
-                            <input type="password" id="pass" class="form-control" formControlName="pass"
-                                placeholder="Ingrese su contraseña" />
-                        </div>
-
-                        <!-- Mensaje de error -->
-                        <div *ngIf="errorMessage" class="alert alert-danger">
-                            {{ errorMessage }}
-                        </div>
-
-                        <!-- Botón de login -->
-                        <div class="gap-2 d-grid">
-                            <button type="submit" class="btn btn-primary">
-                                Iniciar sesión
-                            </button>
-                        </div>
-                    </form>
-
-                    <!-- Enlace a registro -->
-                    <div class="mt-3 text-center">
-                        <a routerLink="/registro">¿No tienes cuenta? Regístrate aquí</a>
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0"><i class="bi bi-person-check me-2"></i>Iniciar sesión</h3>
+        </div>
+        <div class="card-body">
+            <form [formGroup]="loginForm" (ngSubmit)="login()">
+                <!-- Usuario email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input type="text" id="email" class="form-control" formControlName="email"
+                            placeholder="Ingrese su email" />
                     </div>
                 </div>
-            </div>
+
+                <!-- Contraseña -->
+                <div class="mb-3">
+                    <label for="pass" class="form-label">Contraseña</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-key"></i></span>
+                        <input type="password" id="pass" class="form-control" formControlName="pass"
+                            placeholder="Ingrese su contraseña" />
+                    </div>
+                </div>
+
+                <!-- Mensaje de error -->
+                <div *ngIf="errorMessage" class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorMessage }}
+                </div>
+
+                <!-- Botón de login -->
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión
+                    </button>
+                </div>
+
+                <!-- Enlace a registro -->
+                <div class="mt-4 text-center">
+                    <p class="mb-0">¿No tienes cuenta? <a routerLink="/register">Regístrate aquí</a></p>
+                </div>
+            </form>
         </div>
     </div>
 </div>

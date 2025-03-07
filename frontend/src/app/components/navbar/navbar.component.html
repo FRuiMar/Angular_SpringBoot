@@ -29,6 +29,9 @@
             <li *ngIf="isAuthenticated && isAdmin" class="nav-item">
                 <a class="rounded nav-link  text-bg-danger" routerLink="/reservas"><strong>Reservas</strong></a>
             </li>
+            <li *ngIf="isAuthenticated && isAdmin" class="nav-item">
+                <a class="rounded nav-link  text-bg-danger" routerLink="/membresias"><strong>Membresías</strong></a>
+            </li>
 
             <!-- Si está autenticado y no es admin -->
             <li *ngIf="isAuthenticated && !isAdmin" class="nav-item">

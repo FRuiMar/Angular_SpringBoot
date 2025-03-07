@@ -1,50 +1,81 @@
 <div class="container mt-4">
-    <h2 class="mb-4 lista-usuarios-titulo">Tus Clases Reservadas</h2>
+    <div class="reservas-header">
+        <h2 class="reservas-title">Mis Clases Reservadas</h2>
+        <a routerLink="/clases" class="btn btn-reserve">
+            <i class="bi bi-calendar-plus me-2"></i>Reservar Nueva Clase
+        </a>
+    </div>
 
     <!-- Indicador de carga -->
-    <div *ngIf="cargando" class="d-flex justify-content-center my-5">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Cargando...</span>
+    <div *ngIf="cargando" class="loading-container">
+        <div class="spinner">
+            <div class="spinner-inner"></div>
         </div>
+        <p class="loading-text">Cargando tus reservas...</p>
     </div>
 
     <!-- Mensaje de error -->
-    <div *ngIf="error" class="alert alert-danger">
+    <div *ngIf="error" class="alert-message error-message">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
         {{ error }}
     </div>
 
-    <!-- Tabla con clases de Bootstrap cuando hay datos -->
-    <div *ngIf="!cargando && !error && reservasCombinadas.length > 0">
-        <table class="table table-striped table-hover">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Clase</th>
-                    <th scope="col">Entrenador</th>
-                    <th scope="col">Fecha Reserva</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Iterar sobre la lista de reservas combinadas -->
-                <tr *ngFor="let reserva of reservasCombinadas">
-                    <td>{{ reserva.id }}</td>
-                    <td>{{ reserva.nombreClase }}</td>
-                    <td>{{ reserva.nombreEntrenador }}</td>
-                    <td>{{ reserva.hora | date:'dd/MM/yyyy HH:mm' }}</td>
-                    <td>
-                        <button class="btn btn-danger btn-sm" (click)="borrarReserva(reserva.id)">
-                            <i class="fas fa-trash"></i> Borrar
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <!-- Lista de reservas cuando hay datos -->
+    <div *ngIf="!cargando && !error" class="reservas-wrapper">
+        <div *ngIf="reservasCombinadas.length > 0" class="reservas-list">
+            <!-- Iterar sobre la lista de reservas combinadas -->
+            <div *ngFor="let reserva of reservasCombinadas" class="reserva-card">
+                <div class="reserva-header">
+                    <h3 class="reserva-clase-nombre">{{ reserva.nombreClase }}</h3>
 
-    <!-- Mensaje si no hay reservas -->
-    <div *ngIf="!cargando && !error && reservasCombinadas.length === 0" class="alert alert-info">
-        No hay reservas registradas.
-        <a routerLink="/clases" class="btn btn-primary ml-2">Ver clases disponibles</a>
+                </div>
+
+                <div class="reserva-content">
+                    <div class="reserva-info">
+                        <div class="info-item">
+                            <i class="bi bi-person-fill info-icon"></i>
+                            <div class="info-text">
+                                <span class="info-label">Entrenador</span>
+                                <span class="info-value">{{ reserva.nombreEntrenador }}</span>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <i class="bi bi-calendar-event info-icon"></i>
+                            <div class="info-text">
+                                <span class="info-label">Fecha</span>
+                                <span class="info-value">{{ reserva.hora | date:'dd/MM/yyyy' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <i class="bi bi-clock info-icon"></i>
+                            <div class="info-text">
+                                <span class="info-label">Hora</span>
+                                <span class="info-value">{{ reserva.hora | date:'HH:mm' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reserva-actions">
+                        <button class="btn btn-cancel" (click)="borrarReserva(reserva.id)">
+                            <i class="bi bi-trash me-2"></i>Cancelar Reserva
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mensaje si no hay reservas -->
+        <div *ngIf="reservasCombinadas.length === 0" class="no-reservas">
+            <div class="no-reservas-content">
+                <i class="bi bi-calendar-x no-reservas-icon"></i>
+                <h3 class="no-reservas-title">No tienes clases reservadas</h3>
+                <p class="no-reservas-text">Reserva ahora para asegurar tu lugar en nuestras clases</p>
+                <a routerLink="/clases" class="btn btn-reserve-large">
+                    <i class="bi bi-calendar-plus me-2"></i>Ver Clases Disponibles
+                </a>
+            </div>
+        </div>
     </div>
 </div>

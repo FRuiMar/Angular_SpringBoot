@@ -1,20 +1,20 @@
 <div class="container mt-4">
-    <!-- Botón para Crear Entrenador -->
+    <!-- Botón para Crear Membresía -->
     <div class="mb-4">
-        <button class="btn btn-success" (click)="abrirModalCrear()">
-            <i class="bi bi-plus-lg"></i> Crear Entrenador
+        <button class="btn btn-success" (click)="abrirFormulario()">
+            <i class="bi bi-plus-lg"></i> Crear Membresía
         </button>
     </div>
 
-    <!-- Lista de Entrenadores -->
-    <h2 class="mb-4 lista-entrenadores-titulo">Lista de Entrenadores</h2>
+    <!-- Lista de Membresías -->
+    <h2 class="mb-4 lista-membresias-titulo">Lista de Membresías</h2>
 
     <!-- Filtro de búsqueda -->
     <div class="mb-3">
         <div class="input-group">
             <span class="input-group-text"><i class="bi bi-search"></i></span>
-            <input type="text" class="form-control" placeholder="Buscar entrenadores..." [(ngModel)]="filtroTexto"
-                (keyup)="filtrarEntrenadores()">
+            <input type="text" class="form-control" placeholder="Buscar membresías..." [(ngModel)]="filtroTexto"
+                (keyup)="filtrarMembresias()">
         </div>
     </div>
 
@@ -23,30 +23,26 @@
             <thead class="table-dark">
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">DNI</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Apellido</th>
-                    <th scope="col">Especialidad</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Duración (meses)</th>
+                    <th scope="col">Precio (€)</th>
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                @for (entrenador of entrenadoresPaginados; track entrenador.id) {
+                @for (membresia of membresiasPaginadas; track membresia.id) {
                 <tr>
-                    <td>{{ entrenador.id }}</td>
-                    <td>{{ entrenador.dni }}</td>
-                    <td>{{ entrenador.nombre }}</td>
-                    <td>{{ entrenador.apellido }}</td>
-                    <td>
-                        <span class="badge bg-primary">{{ entrenador.especialidad }}</span>
-                    </td>
+                    <td>{{ membresia.id }}</td>
+                    <td><span class="badge bg-primary">{{ membresia.tipo }}</span></td>
+                    <td>{{ membresia.duracion_meses }} meses</td>
+                    <td>{{ membresia.precio | currency:'EUR':'symbol':'1.2-2' }}</td>
                     <td>
                         <div class="btn-group">
-                            <button class="btn btn-warning btn-sm me-1" (click)="abrirModalEditar(entrenador)"
+                            <button class="btn btn-warning btn-sm me-1" (click)="editarMembresia(membresia.id)"
                                 title="Editar">
                                 <i class="bi bi-pencil-square"></i>
                             </button>
-                            <button class="btn btn-danger btn-sm" (click)="borrarEntrenador(entrenador.id)"
+                            <button class="btn btn-danger btn-sm" (click)="borrarMembresia(membresia.id)"
                                 title="Eliminar">
                                 <i class="bi bi-trash3"></i>
                             </button>
@@ -60,7 +56,7 @@
 
     <!-- Barra de paginación con todas las opciones en una línea -->
     <div class="pagination-bar mt-3 d-flex justify-content-between align-items-center"
-        *ngIf="entrenadoresFiltrados.length > 5">
+        *ngIf="membresiasFiltradas.length > 5">
         <!-- Selector de elementos por página (izquierda) -->
         <div class="pagination-size">
             <div class="btn-group">
@@ -75,7 +71,7 @@
         </div>
 
         <!-- Paginación (centro) -->
-        <nav *ngIf="entrenadoresFiltrados.length > itemsPorPagina">
+        <nav *ngIf="membresiasFiltradas.length > itemsPorPagina">
             <ul class="pagination mb-0">
                 <!-- Primera página -->
                 <li class="page-item" [class.disabled]="paginaActual === 1">
@@ -115,18 +111,19 @@
         </nav>
 
         <!-- Contador de resultados (derecha) -->
-        <div class="pagination-info" *ngIf="entrenadoresFiltrados.length > 0">
+        <div class="pagination-info" *ngIf="membresiasFiltradas.length > 0">
             <span class="contador-resultados px-3 py-2">
                 Mostrando {{ (paginaActual - 1) * itemsPorPagina + 1 }} -
-                {{ Math.min(paginaActual * itemsPorPagina, entrenadoresFiltrados.length) }}
-                de {{ entrenadoresFiltrados.length }} entrenadores
+                {{ Math.min(paginaActual * itemsPorPagina, membresiasFiltradas.length) }}
+                de {{ membresiasFiltradas.length }} membresías
             </span>
         </div>
     </div>
 
-    @if (entrenadores.length === 0) {
+    <!-- Mensaje si no hay membresías -->
+    @if (membresias.length === 0) {
     <div class="alert alert-info">
-        No hay entrenadores registrados.
+        No hay membresías registradas.
     </div>
     }
 </div>

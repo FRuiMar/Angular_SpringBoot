@@ -2,4 +2,142 @@
   color: white;
   text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
     1px 1px 0 black; /* Contorno más grueso */
+  border-bottom: 2px solid #dee2e6;
+  padding-bottom: 10px;
+}
+
+.img-avatar {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #eee;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.img-avatar:hover {
+  transform: scale(1.1);
+}
+
+.no-image-placeholder {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.no-image-placeholder i {
+  font-size: 2rem;
+  color: #aaa;
+}
+
+.table th {
+  vertical-align: middle;
+  padding: 12px 8px;
+}
+
+.table td {
+  vertical-align: middle;
+  padding: 12px 8px;
+}
+
+.pagination .page-link {
+  color: #007bff;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+/* Animación para las filas */
+tbody tr {
+  transition: background-color 0.2s;
+}
+
+tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.05) !important;
+}
+.pagination-bar {
+  background-color: #ffffff; /* Fondo blanco en lugar de gris claro */
+  border-radius: 8px;
+  padding: 10px 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra un poco más pronunciada */
+  border: 1px solid #e9ecef; /* Borde sutil */
+}
+
+.contador-resultados {
+  background-color: #f8f9fa; /* Fondo gris claro para el contador */
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  color: #212529; /* Color de texto más oscuro para mejor contraste */
+  display: inline-block;
+  font-size: 0.9rem;
+  font-weight: 500; /* Texto un poco más bold */
+  border: 1px solid #dee2e6;
+}
+
+.pagination {
+  margin-bottom: 0;
+}
+
+.pagination .page-link {
+  color: #dc3545; /* Rojo para los enlaces de paginación */
+  font-weight: 500;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #dc3545; /* Rojo para el botón activo */
+  border-color: #dc3545;
+  color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #6c757d; /* Gris para botones deshabilitados */
+}
+
+.pagination-size {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #212529; /* Color más oscuro */
+  font-weight: 500;
+}
+
+/* Estilo para los botones de selección de página */
+.pagination-size .btn-primary {
+  background-color: #dc3545; /* Botones rojos */
+  border-color: #dc3545;
+}
+
+.pagination-size .btn-outline-primary {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.pagination-size .btn-outline-primary:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Para pantallas pequeñas */
+@media (max-width: 768px) {
+  .pagination-bar {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .pagination-size,
+  .pagination-info,
+  nav {
+    width: 100%;
+    justify-content: center;
+    display: flex;
+  }
 }
