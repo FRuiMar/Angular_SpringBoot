@@ -297,6 +297,8 @@ export class ApiService {
     return this.http.delete(`${this.baseUrl}/entrenador/borrarEntrenadorPorId`, { body: { id } });
   }
 
+
+
   // Métodos para Clase-Gym
   getClasesEntreno(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/claseEntreno/obtener`);
